@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -32,10 +33,9 @@ public class MainActivity extends AppCompatActivity {
     private Main_frag main_frag;
     private Add_frag add_frag;
     private User_frag user_frag;
-    ///////////////////////////////////////////
+
     private BottomNavigationView navigationView;
     private FrameLayout frameLayout;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
