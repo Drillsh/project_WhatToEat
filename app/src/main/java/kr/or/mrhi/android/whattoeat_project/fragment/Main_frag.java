@@ -20,13 +20,14 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 
 import kr.or.mrhi.android.whattoeat_project.R;
+import kr.or.mrhi.android.whattoeat_project.activity.ListActivity;
 import kr.or.mrhi.android.whattoeat_project.activity.MainActivity;
 import kr.or.mrhi.android.whattoeat_project.activity.RestaurantActivity;
 import kr.or.mrhi.android.whattoeat_project.adapter.BrandListAdapter;
 import kr.or.mrhi.android.whattoeat_project.controller.RestaurantDB_Controller;
 import kr.or.mrhi.android.whattoeat_project.model.RestaurantData;
 
-public class Main_frag extends Fragment implements BrandListAdapter.OnItemClickListener{
+public class Main_frag extends Fragment implements BrandListAdapter.OnItemClickListener,View.OnClickListener {
 
     private MainActivity mainActivity;
     private EditText edtSearch;
@@ -111,6 +112,19 @@ public class Main_frag extends Fragment implements BrandListAdapter.OnItemClickL
         rvNearbyBrandList = (RecyclerView) view.findViewById(R.id.nearbyBrandList);
         btnMoreList = (Button) view.findViewById(R.id.btnMoreList);
         btnGoMap = (Button) view.findViewById(R.id.btnGoMap);
+        //이벤트 등록
+        btnMoreList.setOnClickListener(this);
+    }
+    //클릭시 이벤트 처리
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()){
+            case R.id.btnMoreList :
+                Intent intent = new Intent(mainActivity,ListActivity.class);
+                startActivity(intent);
+                break;
+
+        }
     }
 
     // 음식점 데이터 가져오기
