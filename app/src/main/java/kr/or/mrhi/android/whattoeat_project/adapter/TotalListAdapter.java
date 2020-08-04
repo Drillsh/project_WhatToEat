@@ -1,17 +1,21 @@
-package kr.or.mrhi.android.whattoeat_project.activity;
+package kr.or.mrhi.android.whattoeat_project.adapter;
 
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import kr.or.mrhi.android.whattoeat_project.R;
+import java.util.ArrayList;
 
-public class BrandListAdapter extends RecyclerView.Adapter<BrandListAdapter.CustomViewHolder> {
+import kr.or.mrhi.android.whattoeat_project.R;
+import kr.or.mrhi.android.whattoeat_project.model.RestaurantData;
+
+public class TotalListAdapter extends RecyclerView.Adapter<TotalListAdapter.CustomViewHolder> {
 
     private Context context;
     private ArrayList<RestaurantData> brandList;
@@ -20,20 +24,20 @@ public class BrandListAdapter extends RecyclerView.Adapter<BrandListAdapter.Cust
     private OnItemClickListener mListener = null;
 
     // 생성자
-    public BrandListAdapter(Context context) {this.context = context;}
+    public TotalListAdapter(Context context) {this.context = context;}
 
     @NonNull
     @Override
-    public BrandListAdapter.CustomViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
+    public TotalListAdapter.CustomViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
 
         View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.data_food, viewGroup, false);
-        BrandListAdapter.CustomViewHolder viewHolder = new CustomViewHolder(view);
+        TotalListAdapter.CustomViewHolder viewHolder = new CustomViewHolder(view);
 
         return viewHolder;
     }
 
     @Override
-    public void onBindViewHolder(@NonNull BrandListAdapter.CustomViewHolder customViewHolder, int position) {
+    public void onBindViewHolder(@NonNull TotalListAdapter.CustomViewHolder customViewHolder, int position) {
 
     }
 
@@ -61,26 +65,36 @@ public class BrandListAdapter extends RecyclerView.Adapter<BrandListAdapter.Cust
         TextView tvDistance;
         TextView tvCallNumber;
         TextView tvAddress;
-
+        Button btnDel;
+        int pos = 0;
         public CustomViewHolder(@NonNull View itemView) {
             super(itemView);
 
             tvEateryName = (TextView) itemView.findViewById(R.id.tvEateryName);
-            tvEateryName.setSelected(true);
             tvFoodMenu = (TextView) itemView.findViewById(R.id.tvFoodMenu);
             tvDistance = (TextView) itemView.findViewById(R.id.tvDistance);
             tvCallNumber = (TextView) itemView.findViewById(R.id.tvCallNumber);
             tvAddress = (TextView) itemView.findViewById(R.id.tvAddress);
+            btnDel = (Button) itemView.findViewById(R.id.btnDel);
 
             // 클릭 이벤트
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    int pos = getAdapterPosition();
+                    pos = getAdapterPosition();
                     if (pos != RecyclerView.NO_POSITION) {
 
                         mListener.onItemClick(view, pos);
                     }
+                }
+            });
+            // 버튼 클릭 이벤트
+            btnDel.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    brandList.remove(pos);
+                    //무효화 영역처리
+                    notifyDataSetChanged();
                 }
             });
         }
@@ -104,3 +118,4 @@ public class BrandListAdapter extends RecyclerView.Adapter<BrandListAdapter.Cust
     public void setmListener(OnItemClickListener mListener) {
         this.mListener = mListener;
     }
+}
