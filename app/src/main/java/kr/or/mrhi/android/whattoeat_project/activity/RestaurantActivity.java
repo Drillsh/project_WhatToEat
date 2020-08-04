@@ -65,7 +65,7 @@ public class RestaurantActivity extends AppCompatActivity implements View.OnClic
         switch (view.getId()){
             //음식점으로 전화연결
             case R.id.btnRestCall :
-                Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel: "+ restaurantData.getPhoneNum()));
+                Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:012-3456-7890"));
                 startActivity(intent);
                 break;
             //음식점 위치 정보

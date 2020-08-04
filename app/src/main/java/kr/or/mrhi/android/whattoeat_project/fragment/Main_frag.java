@@ -1,6 +1,7 @@
 package kr.or.mrhi.android.whattoeat_project.fragment;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,6 +21,7 @@ import java.util.ArrayList;
 
 import kr.or.mrhi.android.whattoeat_project.R;
 import kr.or.mrhi.android.whattoeat_project.activity.MainActivity;
+import kr.or.mrhi.android.whattoeat_project.activity.RestaurantActivity;
 import kr.or.mrhi.android.whattoeat_project.adapter.BrandListAdapter;
 import kr.or.mrhi.android.whattoeat_project.controller.RestaurantDB_Controller;
 import kr.or.mrhi.android.whattoeat_project.model.RestaurantData;
@@ -92,6 +94,8 @@ public class Main_frag extends Fragment implements BrandListAdapter.OnItemClickL
         nearbyListAdapter.setOnItemClickListener(new BrandListAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View v, int pos) {
+                Intent intent = new Intent(getActivity(), RestaurantActivity.class);
+                startActivity(intent);
                 Toast.makeText(mainActivity, "클릭클릭", Toast.LENGTH_SHORT).show();
             }
         });
