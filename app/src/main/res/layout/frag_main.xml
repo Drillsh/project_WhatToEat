@@ -16,14 +16,13 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:orientation="vertical">
 
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_margin="10dp"
-                android:layout_weight="1">
+                android:layout_height="80dp"
+                android:layout_margin="5dp">
 
                 <LinearLayout
                     android:layout_width="wrap_content"
@@ -42,8 +41,8 @@
 
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_margin="10dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
                 android:layout_marginBottom="10dp"
                 android:layout_weight="1"
                 app:cardBackgroundColor="#AE8BC34A"
@@ -54,7 +53,7 @@
                     android:layout_height="match_parent"
                     android:gravity="center"
                     android:orientation="horizontal"
-                    android:padding="5dp">
+                    android:padding="15dp">
 
                     <EditText
                         android:id="@+id/edtSearch"
@@ -79,9 +78,8 @@
 
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_margin="10dp"
-                android:layout_weight="2"
+                android:layout_height="150dp"
+                android:layout_margin="5dp"
                 app:cardBackgroundColor="#954CAF50"
                 app:cardCornerRadius="18dp">
 
@@ -89,7 +87,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:orientation="vertical"
-                    android:padding="5dp">
+                    android:padding="15dp">
 
                     <TextView
                         android:layout_width="match_parent"
@@ -108,17 +106,17 @@
 
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_margin="10dp"
+                android:layout_height="300dp"
+                android:layout_margin="5dp"
                 android:layout_weight="10"
                 app:cardBackgroundColor="#9C009688"
                 app:cardCornerRadius="18dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:padding="5dp">
+                    android:padding="15dp">
 
                     <TextView
                         android:id="@+id/textView2"
@@ -132,11 +130,11 @@
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/nearbyBrandList"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content" />
+                        android:layout_height="200dp" />
 
                     <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
+                        android:layout_height="wrap_content"
                         android:orientation="horizontal">
 
                         <Button
