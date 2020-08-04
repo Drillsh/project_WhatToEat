@@ -38,6 +38,12 @@ public class BrandListAdapter extends RecyclerView.Adapter<BrandListAdapter.Cust
     @Override
     public void onBindViewHolder(@NonNull BrandListAdapter.CustomViewHolder customViewHolder, int position) {
 
+        customViewHolder.tvBrandName.setText(brandList.get(position).getBrandName());
+        customViewHolder.tvCategory.setText(brandList.get(position).getCategory());
+        customViewHolder.tvPhoneNum.setText(brandList.get(position).getPhoneNum());
+        customViewHolder.tvAddress.setText(brandList.get(position).getAddress());
+        customViewHolder.tvDistance.setText(brandList.get(position).getDistance()+"m");
+
     }
 
     @Override
