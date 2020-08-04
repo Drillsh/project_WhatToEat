@@ -5,11 +5,19 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.Signature;
 import android.os.Bundle;
+import android.util.Base64;
+import android.util.Log;
 import android.view.MenuItem;
 import android.widget.FrameLayout;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+
+import java.security.MessageDigest;
+
 import kr.or.mrhi.android.whattoeat_project.R;
 import kr.or.mrhi.android.whattoeat_project.fragment.Add_frag;
 import kr.or.mrhi.android.whattoeat_project.fragment.Main_frag;
@@ -62,7 +70,8 @@ public class MainActivity extends AppCompatActivity {
         });
         // 초기세팅: Main Fragment
         setChangeFragment(FRAG_MAIN);
-
+        //해쉬 키값 찾기
+        getAppKeyHash();
     }
 
     // 프래그먼트 변환 함수
@@ -89,6 +98,21 @@ public class MainActivity extends AppCompatActivity {
     private void findViewByIdFunc() {
         navigationView = (BottomNavigationView) findViewById(R.id.navigationView);
         frameLayout = (FrameLayout) findViewById(R.id.frameLayout);
+    }
+    public void getAppKeyHash() {
+        try {
+            PackageInfo info = getPackageManager().getPackageInfo(getPackageName(), PackageManager.GET_SIGNATURES);
+            for (Signature signature : info.signatures) {
+                MessageDigest md;
+                md = MessageDigest.getInstance("SHA");
+                md.update(signature.toByteArray());
+                String something = new String(Base64.encode(md.digest(), 0));
+                Log.e("Hash key", something);
+            }
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            Log.e("name not found", e.toString());
+        }
     }
 
 }
