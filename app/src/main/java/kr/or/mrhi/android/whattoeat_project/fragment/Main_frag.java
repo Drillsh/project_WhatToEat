@@ -1,6 +1,7 @@
 package kr.or.mrhi.android.whattoeat_project.fragment;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,11 +19,12 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 
 import kr.or.mrhi.android.whattoeat_project.R;
+import kr.or.mrhi.android.whattoeat_project.activity.ListActivity;
 import kr.or.mrhi.android.whattoeat_project.activity.MainActivity;
 import kr.or.mrhi.android.whattoeat_project.adapter.BrandListAdapter;
 import kr.or.mrhi.android.whattoeat_project.model.RestaurantData;
 
-public class Main_frag extends Fragment {
+public class Main_frag extends Fragment implements View.OnClickListener {
 
     private MainActivity mainActivity;
     private EditText edtSearch;
@@ -85,5 +87,18 @@ public class Main_frag extends Fragment {
         nearbyBrandList = (RecyclerView) view.findViewById(R.id.nearbyBrandList);
         btnMoreList = (Button) view.findViewById(R.id.btnMoreList);
         btnGoMap = (Button) view.findViewById(R.id.btnGoMap);
+        //이벤트 등록
+        btnMoreList.setOnClickListener(this);
+    }
+    //클릭시 이벤트 처리
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()){
+            case R.id.btnMoreList :
+                Intent intent = new Intent(mainActivity,ListActivity.class);
+                startActivity(intent);
+                break;
+
+        }
     }
 }

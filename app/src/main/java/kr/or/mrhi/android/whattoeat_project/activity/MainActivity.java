@@ -26,9 +26,9 @@ import kr.or.mrhi.android.whattoeat_project.fragment.User_frag;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static final int FRAG_MAIN = 0;
-    private static final int FRAG_ADD = 1;
-    private static final int FRAG_USER = 2;
+    public static final int FRAG_MAIN = 0;
+    public static final int FRAG_ADD = 1;
+    public static final int FRAG_USER = 2;
 
     private Main_frag main_frag;
     private Add_frag add_frag;
@@ -75,7 +75,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     // 프래그먼트 변환 함수
-    private void setChangeFragment(int fragment) {
+    public void setChangeFragment(int fragment) {
 
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();

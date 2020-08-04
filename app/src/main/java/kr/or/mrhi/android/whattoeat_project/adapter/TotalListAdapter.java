@@ -38,7 +38,11 @@ public class TotalListAdapter extends RecyclerView.Adapter<TotalListAdapter.Cust
 
     @Override
     public void onBindViewHolder(@NonNull TotalListAdapter.CustomViewHolder customViewHolder, int position) {
-
+        customViewHolder.tvEateryName.setText(brandList.get(position).getBrandName());
+        customViewHolder.tvFoodMenu.setText(brandList.get(position).getCategory());
+        customViewHolder.tvDistance.setText(String.valueOf(brandList.get(position).getDistance())+"M");
+        customViewHolder.tvCallNumber.setText("☎ "+brandList.get(position).getPhoneNum());
+        customViewHolder.tvAddress.setText(brandList.get(position).getAddress());
     }
 
     @Override

@@ -35,13 +35,16 @@
                     <androidx.cardview.widget.CardView
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        app:cardCornerRadius="15sp">
+                        android:layout_marginTop="5dp"
+                        android:background="#8D96CE"
+                        app:cardBackgroundColor="#00F5EDED"
+                        app:cardCornerRadius="15sp"
+                        app:cardUseCompatPadding="false">
 
                         <Button
                             android:id="@+id/btnDel"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="10dp"
                             android:background="#8D96CE"
                             android:text="삭제"
                             android:textSize="20sp"
