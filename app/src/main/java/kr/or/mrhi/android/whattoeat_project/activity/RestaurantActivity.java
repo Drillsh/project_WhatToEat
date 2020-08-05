@@ -13,6 +13,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Gallery;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -26,14 +27,15 @@ import kr.or.mrhi.android.whattoeat_project.model.RestaurantData;
 public class RestaurantActivity extends AppCompatActivity implements View.OnClickListener{
     private TextView tvRestName, tvRestAdress, tvRestContact;
     private Button btnRestCall, btnRestLocation, btnAddComment;
+    private RatingBar rbTotal;
     private Gallery gallery;
     private RecyclerView restaurantList;
     private RestaurantListAdapter restaurantListAdapter;
     private RestaurantGalleryAdapter restaurantGalleryAdapter;
     private RestaurantData restaurantData;
 
-    private ArrayList<RestaurantData> restList = new ArrayList<RestaurantData>();
-    private ArrayList<CommentData> commentList = new ArrayList<CommentData>();
+    private ArrayList<RestaurantData> restList = new ArrayList<>();
+    private ArrayList<CommentData> commentList = new ArrayList<>();
 
 
     @Override
@@ -42,6 +44,10 @@ public class RestaurantActivity extends AppCompatActivity implements View.OnClic
         setContentView(R.layout.activity_restaurant);
 
         findViewByIdFnc();
+
+
+
+        rbTotal.setEnabled(false);
     }
 
     private void findViewByIdFnc() {
@@ -53,6 +59,7 @@ public class RestaurantActivity extends AppCompatActivity implements View.OnClic
         btnAddComment = findViewById(R.id.btnAddComment);
         gallery = findViewById(R.id.gallery);
         restaurantList = findViewById(R.id.restaurantList);
+        rbTotal = findViewById(R.id.rbTotal);
 
         btnRestCall.setOnClickListener(this);
         btnRestLocation.setOnClickListener(this);
@@ -81,6 +88,7 @@ public class RestaurantActivity extends AppCompatActivity implements View.OnClic
                 ImageView ivCommentImage = commentView.findViewById(R.id.ivCommentImage);
                 Button btnCommentImage = commentView.findViewById(R.id.btnCommentImage);
                 EditText etComment = commentView.findViewById(R.id.etComment);
+                RatingBar rbRecommed = commentView.findViewById(R.id.rbRecommed);
 
                 //사진 등록 버튼
                 btnCommentImage.setOnClickListener(new View.OnClickListener() {

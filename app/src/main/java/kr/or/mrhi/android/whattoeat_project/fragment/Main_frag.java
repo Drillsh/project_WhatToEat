@@ -26,6 +26,7 @@ import kr.or.mrhi.android.whattoeat_project.R;
 import kr.or.mrhi.android.whattoeat_project.activity.ListActivity;
 import kr.or.mrhi.android.whattoeat_project.activity.MainActivity;
 import kr.or.mrhi.android.whattoeat_project.activity.RestaurantActivity;
+import kr.or.mrhi.android.whattoeat_project.activity.WebSearchActivity;
 import kr.or.mrhi.android.whattoeat_project.adapter.BrandListAdapter;
 import kr.or.mrhi.android.whattoeat_project.controller.RestaurantDB_Controller;
 import kr.or.mrhi.android.whattoeat_project.function.Function;
@@ -33,6 +34,7 @@ import kr.or.mrhi.android.whattoeat_project.model.RestaurantData;
 
 // 메인 화면 프래그먼트
 public class Main_frag extends Fragment implements BrandListAdapter.OnItemClickListener, View.OnClickListener {
+
 
     private MainActivity mainActivity;
     private EditText edtSearch;
@@ -139,8 +141,10 @@ public class Main_frag extends Fragment implements BrandListAdapter.OnItemClickL
         rvNearbyBrandList = (RecyclerView) view.findViewById(R.id.nearbyBrandList);
         btnMoreList = (Button) view.findViewById(R.id.btnMoreList);
         btnGoMap = (Button) view.findViewById(R.id.btnGoMap);
+
         //이벤트 등록
         btnMoreList.setOnClickListener(this);
+        ibSearch.setOnClickListener(this);
     }
 
     //더보기 클릭시 이벤트 처리
@@ -151,6 +155,15 @@ public class Main_frag extends Fragment implements BrandListAdapter.OnItemClickL
                 Intent intent = new Intent(mainActivity, ListActivity.class);
                 startActivity(intent);
                 break;
+
+            case R.id.ibSearch :
+                //웹 검색 액티비티로 이동
+                Intent intentSearch = new Intent(getActivity(), WebSearchActivity.class);
+                //edtSearch 입력값 넘겨줌
+                intentSearch.putExtra("name",edtSearch.getText().toString());
+                startActivity(intentSearch);
+                break;
+
         }
     }
 
