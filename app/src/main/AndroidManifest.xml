@@ -16,7 +16,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".activity.RestaurantActivity"></activity>
+        <activity android:name=".activity.WebSearchActivity"></activity>
+        <activity android:name=".activity.RestaurantActivity" />
 
         <meta-data
             android:name="com.kakao.sdk.AppKey"
