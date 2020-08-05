@@ -53,7 +53,7 @@ public class Main_frag extends Fragment implements BrandListAdapter.OnItemClickL
 
         // 더미 데이터 추가
         restaurantDataArrayList.add(new RestaurantData("춘향미엔", "중식", "123124",
-                "왕십리asdfasdfasdfasdfasdfasdfsadfasdfasdfasdfasdfasd", 0, "123", 3.5f));
+                "왕십리asdfasdfasdfasdfasdfasdfsadfasdfasdfasdfasdfasd", 0, "123", 3.5f,54.45451,572.15216454));
 
         RestaurantDB_Controller restaurantDB_controller;
         restaurantDB_controller = RestaurantDB_Controller.getInstance(mainActivity);
@@ -94,7 +94,7 @@ public class Main_frag extends Fragment implements BrandListAdapter.OnItemClickL
 
         // 더미 데이터 추가
         arrayList.add(new RestaurantData("새마을식당", "한식", "123124",
-                "왕십리asdfasdfasdfasdfasdfasdfsadfasdfasdfasdfasdfasd", 0, "123", 4.0f));
+                "왕십리asdfasdfasdfasdfasdfasdfsadfasdfasdfasdfasdfasd", 0, "123", 4.0f,3.2548478464,3.847844584));
 
 
         // 오늘의 매장 추천

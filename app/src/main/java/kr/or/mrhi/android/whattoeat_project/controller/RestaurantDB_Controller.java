@@ -49,7 +49,9 @@ public class RestaurantDB_Controller extends SQLiteOpenHelper {
                         "address VARCHAR(30)," +
                         "distance INTEGER(5)," +
                         "imgPath VARCHAR(30)," +
-                        "starRating FLOAT(2,1));"
+                        "starRating FLOAT(2,1),"+
+                        "latitude DOUBLE(3,8),"+
+                        "longitude DOUBLE(3,8));"
         );
     }
 
@@ -80,7 +82,9 @@ public class RestaurantDB_Controller extends SQLiteOpenHelper {
                         cursor.getString(3),
                         cursor.getInt(4),
                         cursor.getString(5),
-                        cursor.getFloat(6)
+                        cursor.getFloat(6),
+                        cursor.getDouble(7),
+                        cursor.getDouble(8)
                 );
 
                 restaurantList.add(restaurantData);
@@ -113,7 +117,9 @@ public class RestaurantDB_Controller extends SQLiteOpenHelper {
                         + "'" + data.getAddress() + "',"
                         + data.getDistance() + ","
                         + "'" + data.getImgPath() + "',"
-                        + data.getStarRating()+");";
+                        + data.getStarRating()+","
+                        + data.getLatitude() +","
+                        + data.getLongitude() +")";
 
                 // 쿼리문 작성해서 넘김
                 // 예외발생시 SQLException

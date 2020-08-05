@@ -13,6 +13,8 @@ public class RestaurantData implements Parcelable {
     private int distance;
     private String imgPath;
     private float starRating;
+    private double latitude;
+    private double longitude;
 
     protected RestaurantData(Parcel in) {
         brandName = in.readString();
@@ -22,9 +24,11 @@ public class RestaurantData implements Parcelable {
         distance = in.readInt();
         imgPath = in.readString();
         starRating = in.readFloat();
+        latitude = in.readDouble();
+        longitude = in.readDouble();
     }
 
-    public RestaurantData(String brandName, String category, String phoneNum, String address, int distance, String imgPath, float starRating) {
+    public RestaurantData(String brandName, String category, String phoneNum, String address, int distance, String imgPath, float starRating, double latitude,double longitude) {
         this.brandName = brandName;
         this.category = category;
         this.phoneNum = phoneNum;
@@ -32,6 +36,8 @@ public class RestaurantData implements Parcelable {
         this.distance = distance;
         this.imgPath = imgPath;
         this.starRating = starRating;
+        this.latitude = latitude;
+        this.longitude = longitude;
     }
 
     // ---------------getters, setters -------------------
@@ -62,6 +68,8 @@ public class RestaurantData implements Parcelable {
         dest.writeInt(distance);
         dest.writeString(imgPath);
         dest.writeFloat(starRating);
+        dest.writeDouble(latitude);
+        dest.writeDouble(longitude);
     }
 
     public String getBrandName() {
@@ -118,5 +126,21 @@ public class RestaurantData implements Parcelable {
 
     public void setStarRating(float starRating) {
         this.starRating = starRating;
+    }
+
+    public double getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
+    }
+
+    public double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(double longtude) {
+        this.longitude = longtude;
     }
 }
