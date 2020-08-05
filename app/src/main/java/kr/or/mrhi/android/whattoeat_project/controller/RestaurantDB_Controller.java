@@ -17,7 +17,7 @@ import kr.or.mrhi.android.whattoeat_project.model.RestaurantData;
 public class RestaurantDB_Controller extends SQLiteOpenHelper {
 
     private static final String DB_NAME = "WhatToEatDB";
-    private static final int VERSION = 1;
+    private static final int VERSION = 2;
 
     private Context context;
 
@@ -48,7 +48,8 @@ public class RestaurantDB_Controller extends SQLiteOpenHelper {
                         "phoneNum VARCHAR(20)," +
                         "address VARCHAR(30)," +
                         "distance INTEGER(5)," +
-                        "imgPath VARCHAR(30) );"
+                        "imgPath VARCHAR(30)," +
+                        "starRating FLOAT(2,1));"
         );
     }
 
@@ -78,7 +79,9 @@ public class RestaurantDB_Controller extends SQLiteOpenHelper {
                         cursor.getString(2),
                         cursor.getString(3),
                         cursor.getInt(4),
-                        cursor.getString(5));
+                        cursor.getString(5),
+                        cursor.getFloat(6)
+                );
 
                 restaurantList.add(restaurantData);
             }
@@ -109,7 +112,8 @@ public class RestaurantDB_Controller extends SQLiteOpenHelper {
                         + "'" + data.getPhoneNum() + "',"
                         + "'" + data.getAddress() + "',"
                         + data.getDistance() + ","
-                        + "'" + data.getImgPath() + "');";
+                        + "'" + data.getImgPath() + "',"
+                        + data.getStarRating()+");";
 
                 // 쿼리문 작성해서 넘김
                 // 예외발생시 SQLException

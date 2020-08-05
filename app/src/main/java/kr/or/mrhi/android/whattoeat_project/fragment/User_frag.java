@@ -28,6 +28,7 @@ import kr.or.mrhi.android.whattoeat_project.activity.MainActivity;
 import kr.or.mrhi.android.whattoeat_project.function.Function;
 import kr.or.mrhi.android.whattoeat_project.kakaologin.LoginActivity;
 
+// 사용자 화면 프래그먼트
 public class User_frag extends Fragment implements View.OnClickListener{
 
     private MainActivity mainActivity;

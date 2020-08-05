@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -14,16 +15,22 @@ import java.util.ArrayList;
 import kr.or.mrhi.android.whattoeat_project.R;
 import kr.or.mrhi.android.whattoeat_project.model.RestaurantData;
 
+// 음식점 리스트 어댑터
 public class BrandListAdapter extends RecyclerView.Adapter<BrandListAdapter.CustomViewHolder> {
 
     private Context context;
     private ArrayList<RestaurantData> brandList;
 
+    private boolean todayBrandPick;
+
     // 리스너 객체 참조를 저장하는 변수
     private OnItemClickListener mListener = null;
 
     // 생성자
-    public BrandListAdapter(Context context) {this.context = context;}
+    public BrandListAdapter(Context context, boolean todayBrandPick) {
+        this.context = context;
+        this.todayBrandPick = todayBrandPick;
+    }
 
     @NonNull
     @Override
@@ -43,13 +50,15 @@ public class BrandListAdapter extends RecyclerView.Adapter<BrandListAdapter.Cust
         customViewHolder.tvPhoneNum.setText(brandList.get(position).getPhoneNum());
         customViewHolder.tvAddress.setText(brandList.get(position).getAddress());
         customViewHolder.tvDistance.setText(brandList.get(position).getDistance()+"m");
+        customViewHolder.startRating.setRating(brandList.get(position).getStarRating());
 
+        // 글자 흘러가게 하기
+        // singleLine = true, ellipsize = marquee 처리도 함께
+        customViewHolder.tvAddress.setSelected(true);
     }
 
     @Override
-    public int getItemCount() {
-        return brandList != null ? brandList.size() : 0;
-    }
+    public int getItemCount() { return brandList != null ? brandList.size() : 0; }
 
     // 리사이클러뷰 클릭 이벤트를 위한 인터페이스
     public interface OnItemClickListener
@@ -70,6 +79,7 @@ public class BrandListAdapter extends RecyclerView.Adapter<BrandListAdapter.Cust
         TextView tvDistance;
         TextView tvPhoneNum;
         TextView tvAddress;
+        RatingBar startRating;
 
         public CustomViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -79,6 +89,8 @@ public class BrandListAdapter extends RecyclerView.Adapter<BrandListAdapter.Cust
             tvDistance = (TextView) itemView.findViewById(R.id.tvDistance);
             tvPhoneNum = (TextView) itemView.findViewById(R.id.tvPhoneNum);
             tvAddress = (TextView) itemView.findViewById(R.id.tvAddress);
+            startRating = (RatingBar) itemView.findViewById(R.id.starRating);
+
 
             // 클릭 이벤트
             itemView.setOnClickListener(new View.OnClickListener() {
@@ -92,7 +104,6 @@ public class BrandListAdapter extends RecyclerView.Adapter<BrandListAdapter.Cust
                 }
             });
         }
-
     }
 
     // -------------------Getters, Setters ------------------------

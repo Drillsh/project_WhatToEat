@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    app:cardBackgroundColor="#34030100"
+    app:cardBackgroundColor="#14030100"
     app:cardCornerRadius="5dp">
 
     <LinearLayout
@@ -24,7 +24,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
-            android:layout_weight="7"
+            android:layout_weight="10"
             android:orientation="vertical">
 
             <LinearLayout
@@ -50,6 +50,12 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="음식 종류" />
+
+                    <TextView
+                        android:id="@+id/tvPhoneNum"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="전화번호" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -71,6 +77,15 @@
                         android:layout_height="wrap_content"
                         android:gravity="right"
                         android:text="100m" />
+
+                    <RatingBar
+                        android:id="@+id/starRating"
+                        style="@style/Widget.AppCompat.RatingBar.Small"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center|right"
+                        android:numStars="5"
+                        android:stepSize="0.5" />
                 </LinearLayout>
             </LinearLayout>
 
@@ -80,16 +95,13 @@
                 android:orientation="vertical">
 
                 <TextView
-                    android:id="@+id/tvPhoneNum"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="전화번호" />
-
-                <TextView
                     android:id="@+id/tvAddress"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:ellipsize="marquee"
+                    android:singleLine="true"
                     android:text="주소" />
+
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>

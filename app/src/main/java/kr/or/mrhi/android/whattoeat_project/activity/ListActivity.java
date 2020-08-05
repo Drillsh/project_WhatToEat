@@ -31,8 +31,6 @@ public class ListActivity extends AppCompatActivity implements View.OnClickListe
         findViewByIdFunction();
 
         arrayList = new ArrayList<RestaurantData>();
-        //테스트용 바보
-        arrayList.add(new RestaurantData("이시형핵바보","한식","0213481215","서울시",100,"path"));
         totalListAdapter = new TotalListAdapter(getApplicationContext());
         linearLayoutManager = new LinearLayoutManager(getApplicationContext());
         //어댑터에 리스트 추가

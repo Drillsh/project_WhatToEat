@@ -16,6 +16,7 @@ import net.daum.mf.map.api.MapView;
 import kr.or.mrhi.android.whattoeat_project.R;
 import kr.or.mrhi.android.whattoeat_project.activity.MainActivity;
 
+// 음식점 추가 프래그먼트
 public class Add_frag extends Fragment {
 
     private MainActivity mainActivity;
