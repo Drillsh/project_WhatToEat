@@ -116,7 +116,7 @@ public class Main_frag extends Fragment implements BrandListAdapter.OnItemClickL
             @Override
             public void onItemClick(View v, int pos) {
                 Intent intent = new Intent(getActivity(), RestaurantActivity.class);
-                intent.putExtra("todayList", pos);
+                intent.putExtra("todayList", position);
                 startActivity(intent);
             }
         });
