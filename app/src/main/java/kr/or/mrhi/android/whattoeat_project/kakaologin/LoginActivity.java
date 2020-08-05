@@ -21,7 +21,7 @@ import kr.or.mrhi.android.whattoeat_project.R;
 import kr.or.mrhi.android.whattoeat_project.activity.MainActivity;
 import kr.or.mrhi.android.whattoeat_project.function.Function;
 import kr.or.mrhi.android.whattoeat_project.model.UserData;
-
+//카카오톡 로그인 클래스
 public class LoginActivity extends AppCompatActivity {
     private SessionCallback sessionCallback;
 

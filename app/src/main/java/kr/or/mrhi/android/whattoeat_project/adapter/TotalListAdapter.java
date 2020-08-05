@@ -22,6 +22,7 @@ public class TotalListAdapter extends RecyclerView.Adapter<TotalListAdapter.Cust
 
     // 리스너 객체 참조를 저장하는 변수
     private OnItemClickListener mListener = null;
+    private OnItemLongClickListener mLongListener = null;
 
     // 생성자
     public TotalListAdapter(Context context) {this.context = context;}
@@ -39,10 +40,12 @@ public class TotalListAdapter extends RecyclerView.Adapter<TotalListAdapter.Cust
     @Override
     public void onBindViewHolder(@NonNull TotalListAdapter.CustomViewHolder customViewHolder, int position) {
         customViewHolder.tvEateryName.setText(brandList.get(position).getBrandName());
+        customViewHolder.tvEateryName.setSelected(true);
         customViewHolder.tvFoodMenu.setText(brandList.get(position).getCategory());
         customViewHolder.tvDistance.setText(String.valueOf(brandList.get(position).getDistance())+"M");
         customViewHolder.tvCallNumber.setText("☎ "+brandList.get(position).getPhoneNum());
         customViewHolder.tvAddress.setText(brandList.get(position).getAddress());
+        customViewHolder.tvAddress.setSelected(true);
     }
 
     @Override
@@ -55,11 +58,18 @@ public class TotalListAdapter extends RecyclerView.Adapter<TotalListAdapter.Cust
     {
         void onItemClick(View v, int pos);
     }
+    public interface OnItemLongClickListener{
+        void onItemLongClick(View v, int pos);
+    }
 
     // OnItemClickListener 객체 참조를 어댑터에 전달하는 메서드
     public void setOnItemClickListener(OnItemClickListener listener)
     {
         this.mListener = listener;
+    }
+    // OnItemLongClickListener 객체 참조를 어댑터에 전달하는 메서드
+    public void setOnItemLongClickListener(OnItemLongClickListener LongListener){
+        this.mLongListener = LongListener;
     }
 
     public class CustomViewHolder extends RecyclerView.ViewHolder {
@@ -79,7 +89,6 @@ public class TotalListAdapter extends RecyclerView.Adapter<TotalListAdapter.Cust
             tvDistance = (TextView) itemView.findViewById(R.id.tvDistance);
             tvCallNumber = (TextView) itemView.findViewById(R.id.tvCallNumber);
             tvAddress = (TextView) itemView.findViewById(R.id.tvAddress);
-            btnDel = (Button) itemView.findViewById(R.id.btnDel);
 
             // 클릭 이벤트
             itemView.setOnClickListener(new View.OnClickListener() {
@@ -92,15 +101,17 @@ public class TotalListAdapter extends RecyclerView.Adapter<TotalListAdapter.Cust
                     }
                 }
             });
-            // 버튼 클릭 이벤트
-            btnDel.setOnClickListener(new View.OnClickListener() {
+            itemView.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
-                public void onClick(View view) {
-                    brandList.remove(pos);
-                    //무효화 영역처리
-                    notifyDataSetChanged();
+                public boolean onLongClick(View view) {
+                    pos = getAdapterPosition();
+                    if (pos != RecyclerView.NO_POSITION) {
+                        mLongListener.onItemLongClick(view,pos);
+                    }
+                    return true;
                 }
             });
+
         }
 
     }
