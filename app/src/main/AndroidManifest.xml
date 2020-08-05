@@ -16,7 +16,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".activity.WebSearchActivity"></activity>
+        <activity android:name=".activity.MapActivity"></activity>
+        <activity android:name=".activity.WebSearchActivity" />
         <activity android:name=".activity.RestaurantActivity" />
 
         <meta-data
@@ -36,9 +37,7 @@
             android:name="com.kakao.sdk.AppKey"
             android:value="187f279d8f571f1cb52daac8caa4eabc" />
 
-        <activity android:name=".activity.MainActivity">
-
-        </activity>
+        <activity android:name=".activity.MainActivity"></activity>
     </application>
 
 </manifest>

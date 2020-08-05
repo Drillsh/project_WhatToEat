@@ -8,19 +8,15 @@
 
         <item> 중식 </item>
 
-        <item> 패스트푸드 </item>
-
         <item> 양식 </item>
 
         <item> 분식 </item>
+
+        <item> 패스트푸드 </item>
 
         <item> 고기집 </item>
 
         <item> 술집 </item>
 
-        <item> 뷔페 </item>
-
     </string-array>
-
-
 </resources>

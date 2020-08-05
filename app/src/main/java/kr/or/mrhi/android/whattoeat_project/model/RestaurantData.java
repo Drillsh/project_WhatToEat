@@ -40,8 +40,6 @@ public class RestaurantData implements Parcelable {
         this.longitude = longitude;
     }
 
-    // ---------------getters, setters -------------------
-
     public static final Creator<RestaurantData> CREATOR = new Creator<RestaurantData>() {
         @Override
         public RestaurantData createFromParcel(Parcel in) {
@@ -71,6 +69,9 @@ public class RestaurantData implements Parcelable {
         dest.writeDouble(latitude);
         dest.writeDouble(longitude);
     }
+
+
+    // ---------------getters, setters -------------------
 
     public String getBrandName() {
         return brandName;

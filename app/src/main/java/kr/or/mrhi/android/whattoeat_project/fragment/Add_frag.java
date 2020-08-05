@@ -37,6 +37,7 @@ import kr.or.mrhi.android.whattoeat_project.R;
 import kr.or.mrhi.android.whattoeat_project.activity.MainActivity;
 import kr.or.mrhi.android.whattoeat_project.controller.RestaurantDB_Controller;
 import kr.or.mrhi.android.whattoeat_project.function.Function;
+import kr.or.mrhi.android.whattoeat_project.function.GpsTracker;
 import kr.or.mrhi.android.whattoeat_project.model.RestaurantData;
 
 // 음식점 추가 프래그먼트
@@ -73,6 +74,18 @@ public class Add_frag extends Fragment {
         // 카카오맵 인스턴스
         MapView mapView = new MapView(mainActivity);
 
+//        // GpsTracker 인스턴스
+//        GpsTracker gpsTracker = new GpsTracker(view.getContext());
+//
+//        // 현재 좌표
+//        double latitude = gpsTracker.getLatitude();
+//        double longitude = gpsTracker.getLongitude();
+//
+//        // 현재 좌표로 맵이동
+//        MapPoint mapPoint = MapPoint.mapPointWithGeoCoord(latitude, longitude);
+//        mapView.setMapCenterPoint(mapPoint,true);
+//        mapView.setZoomLevel(-1,true);
+
         // 뷰에 카카오맵 세팅
         map_view.addView(mapView);
 
@@ -92,71 +105,80 @@ public class Add_frag extends Fragment {
                 // 위도,경도로 주소 가져오기
                 String address = getCurrentAddress(latitude, longitude);
                 address = address.substring(5);
-                Function.settingToast(mainActivity, address + "");
+                Function.settingToast(mainActivity, address);
 
                 // 다이얼로그
-                View view = View.inflate(mainActivity, R.layout.alert_dialog, null);
-                AlertDialog.Builder dialog = new AlertDialog.Builder(mainActivity);
-                dialog.setTitle("음식점 정보 등록");
-                dialog.setView(view);
-
-                TextView tvName = view.findViewById(R.id.tvName);
-                TextView tvAdress = view.findViewById(R.id.tvAdress);
-                TextView tvFood = view.findViewById(R.id.tvFood);
-                TextView tvPhone = view.findViewById(R.id.tvPhone);
-                final EditText edtName = view.findViewById(R.id.edtName);
-                final EditText edtAdress = view.findViewById(R.id.edtAdress);
-                final EditText edtPhone = view.findViewById(R.id.edtPhone);
-                final Spinner spinner = view.findViewById(R.id.spinner);
-
-                edtAdress.setFocusable(false);
-                edtAdress.setClickable(false);
-                edtAdress.setText(address);
-
-                // 다이얼로그의 카테고리 스피너 설정
-                ArrayAdapter categoryAdapter = ArrayAdapter.createFromResource(
-                        v.getContext(), R.array.spinnerList, android.R.layout.simple_spinner_item);
-
-                categoryAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                spinner.setAdapter(categoryAdapter);
-
-                // 등록 버튼 이벤트
-                dialog.setPositiveButton("등록", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        String name = edtName.getText().toString();
-                        String address = edtAdress.getText().toString();
-                        String category = spinner.getSelectedItem().toString();
-                        String phone = edtPhone.getText().toString();
-
-                        ArrayList<RestaurantData> restaurantData = new ArrayList<>();
-                        restaurantData.add(new RestaurantData(name, category, phone, address, 100, "ss", 2.3f, latitude, longitude));
-
-                        if (name.equals("")) {
-                            Toast.makeText(v.getContext(), "음식점 이름을 입력해주세요", Toast.LENGTH_SHORT).show();
-                            return;
-                        }
-
-                        RestaurantDB_Controller restaurantDB_controller = RestaurantDB_Controller.getInstance(mainActivity);
-
-                        boolean returnValue = restaurantDB_controller.insertRestaurantData(restaurantData);
-                        if (returnValue) {
-                            Function.settingToast(mainActivity, "데이터 삽입 성공");
-                        } else {
-                            Function.settingToast(mainActivity, "데이터 삽입 실패");
-                        }
-                    }
-                });
-
-                dialog.setNegativeButton("취소", null);
-                dialog.show();
+                showDialog(latitude, longitude, address);
             }
         });
 
         return view;
     }
 
+    // 다이얼로그
+    private void showDialog(double latitude, double longitude, String address) {
+        View view = View.inflate(mainActivity, R.layout.alert_dialog, null);
+        AlertDialog.Builder dialog = new AlertDialog.Builder(mainActivity);
+        dialog.setTitle("음식점 정보 등록");
+        dialog.setView(view);
+
+        TextView tvName = view.findViewById(R.id.tvName);
+        TextView tvAdress = view.findViewById(R.id.tvAdress);
+        TextView tvFood = view.findViewById(R.id.tvFood);
+        TextView tvPhone = view.findViewById(R.id.tvPhone);
+        final EditText edtName = view.findViewById(R.id.edtName);
+        final EditText edtAdress = view.findViewById(R.id.edtAdress);
+        final EditText edtPhone = view.findViewById(R.id.edtPhone);
+        final Spinner spinner = view.findViewById(R.id.spinner);
+
+        edtAdress.setFocusable(false);
+        edtAdress.setClickable(false);
+        edtAdress.setText(address);
+
+        // 다이얼로그의 카테고리 스피너 설정
+        ArrayAdapter categoryAdapter = ArrayAdapter.createFromResource(
+                mainActivity, R.array.spinnerList, android.R.layout.simple_spinner_item);
+        categoryAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(categoryAdapter);
+
+        // 등록 버튼 이벤트
+        dialog.setPositiveButton("등록", new DialogInterface.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.N)
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                String name = edtName.getText().toString();
+                String address = edtAdress.getText().toString();
+                String category = spinner.getSelectedItem().toString();
+                String phone = edtPhone.getText().toString();
+
+                // 더미 데이터
+                ArrayList<RestaurantData> restaurantData = new ArrayList<>();
+                restaurantData.add(new RestaurantData(name, category, phone, address, 100, "ss", 2.3f, latitude, longitude));
+
+                // 빈칸 입력시
+                if (name.equals("")) {
+                    Function.settingToast(mainActivity, "음식점 이름을 입력해주세요");
+                    return;
+                }
+
+                // DB에 저장
+                RestaurantDB_Controller restaurantDB_controller = RestaurantDB_Controller.getInstance(mainActivity);
+
+                boolean returnValue = restaurantDB_controller.insertRestaurantData(restaurantData);
+                if (returnValue) {
+                    Function.settingToast(mainActivity, "데이터 삽입 성공");
+                } else {
+                    Function.settingToast(mainActivity, "데이터 삽입 실패");
+                }
+            }
+        });
+
+        dialog.setNegativeButton("취소", null);
+        dialog.show();
+    }
+
     // 위도,경도로 주소 가져오기
+    @RequiresApi(api = Build.VERSION_CODES.N)
     public String getCurrentAddress(double latitude, double longitude) {
 
         //지오코더... GPS를 주소로 변환
@@ -172,18 +194,17 @@ public class Add_frag extends Fragment {
 
         } catch (IOException ioException) {
             //네트워크 문제
-            Toast.makeText(mainActivity, "지오코더 서비스 사용불가", Toast.LENGTH_LONG).show();
+            Function.settingToast(mainActivity, "지오코더 서비스 사용불가");
             return "지오코더 서비스 사용불가";
 
         } catch (IllegalArgumentException illegalArgumentException) {
-            Toast.makeText(mainActivity, "잘못된 GPS 좌표", Toast.LENGTH_LONG).show();
+            Function.settingToast(mainActivity, "잘봇된 GPS 좌표");
             return "잘못된 GPS 좌표";
 
         }
         if (addresses == null || addresses.size() == 0) {
-            Toast.makeText(mainActivity, "주소 미발견", Toast.LENGTH_LONG).show();
+            Function.settingToast(mainActivity, "주소 미발견");
             return "주소 미발견";
-
         }
 
         Address address = addresses.get(0);

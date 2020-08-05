@@ -25,6 +25,7 @@ import java.util.Random;
 import kr.or.mrhi.android.whattoeat_project.R;
 import kr.or.mrhi.android.whattoeat_project.activity.ListActivity;
 import kr.or.mrhi.android.whattoeat_project.activity.MainActivity;
+import kr.or.mrhi.android.whattoeat_project.activity.MapActivity;
 import kr.or.mrhi.android.whattoeat_project.activity.RestaurantActivity;
 import kr.or.mrhi.android.whattoeat_project.activity.WebSearchActivity;
 import kr.or.mrhi.android.whattoeat_project.adapter.BrandListAdapter;
@@ -92,11 +93,6 @@ public class Main_frag extends Fragment implements BrandListAdapter.OnItemClickL
         // DB에서 데이터 가져옴
         ArrayList<RestaurantData> arrayList = getRestaurantData();
 
-        // 더미 데이터 추가
-        arrayList.add(new RestaurantData("새마을식당", "한식", "123124",
-                "왕십리asdfasdfasdfasdfasdfasdfsadfasdfasdfasdfasdfasd", 0, "123", 4.0f,3.2548478464,3.847844584));
-
-
         // 오늘의 매장 추천
         Random rd = new Random();
         int position = rd.nextInt(arrayList.size() - 1);
@@ -144,6 +140,7 @@ public class Main_frag extends Fragment implements BrandListAdapter.OnItemClickL
 
         //이벤트 등록
         btnMoreList.setOnClickListener(this);
+        btnGoMap.setOnClickListener(this);
         ibSearch.setOnClickListener(this);
     }
 
@@ -151,9 +148,17 @@ public class Main_frag extends Fragment implements BrandListAdapter.OnItemClickL
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
+            // 더보기 버튼 클릭
             case R.id.btnMoreList:
                 Intent intent = new Intent(mainActivity, ListActivity.class);
                 startActivity(intent);
+                break;
+
+             // 지도 버튼 클릭
+            case R.id.btnGoMap:
+                Intent intentMap = new Intent(mainActivity, MapActivity.class);
+
+                startActivity(intentMap);
                 break;
 
             case R.id.ibSearch :

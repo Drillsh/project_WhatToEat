@@ -47,6 +47,9 @@ public class ViewPagerAdapter extends PagerAdapter {
         tvPhoneNum.setText(restaurantData.getPhoneNum());
         tvAddress.setText(restaurantData.getAddress());
         starRating.setRating(restaurantData.getStarRating());
+
+        container.addView(view);
+
         return view;
     }
     //Adapter가 관리하는 데이터 리스트의 총개수
