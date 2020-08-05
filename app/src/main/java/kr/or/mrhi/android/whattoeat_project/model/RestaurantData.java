@@ -3,6 +3,7 @@ package kr.or.mrhi.android.whattoeat_project.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+// 음식점 정보 모델
 public class RestaurantData implements Parcelable {
 
     private String brandName;
@@ -11,6 +12,7 @@ public class RestaurantData implements Parcelable {
     private String address;
     private int distance;
     private String imgPath;
+    private float starRating;
 
     protected RestaurantData(Parcel in) {
         brandName = in.readString();
@@ -19,16 +21,20 @@ public class RestaurantData implements Parcelable {
         address = in.readString();
         distance = in.readInt();
         imgPath = in.readString();
+        starRating = in.readFloat();
     }
 
-    public RestaurantData(String brandName, String category, String phoneNum, String address, int distance, String imgPath) {
+    public RestaurantData(String brandName, String category, String phoneNum, String address, int distance, String imgPath, float starRating) {
         this.brandName = brandName;
         this.category = category;
         this.phoneNum = phoneNum;
         this.address = address;
         this.distance = distance;
         this.imgPath = imgPath;
+        this.starRating = starRating;
     }
+
+    // ---------------getters, setters -------------------
 
     public static final Creator<RestaurantData> CREATOR = new Creator<RestaurantData>() {
         @Override
@@ -55,9 +61,8 @@ public class RestaurantData implements Parcelable {
         dest.writeString(address);
         dest.writeInt(distance);
         dest.writeString(imgPath);
+        dest.writeFloat(starRating);
     }
-
-    // ---------------getters, setters -------------------
 
     public String getBrandName() {
         return brandName;
@@ -107,4 +112,11 @@ public class RestaurantData implements Parcelable {
         this.imgPath = imgPath;
     }
 
+    public float getStarRating() {
+        return starRating;
+    }
+
+    public void setStarRating(float starRating) {
+        this.starRating = starRating;
+    }
 }

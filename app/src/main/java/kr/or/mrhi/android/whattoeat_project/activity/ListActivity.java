@@ -34,9 +34,10 @@ public class ListActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_list);
         //아이디를 매치시키는 함수
         findViewByIdFunction();
+
         //초기화 및 클릭 이벤트 등록 함수
         setInitListener();
-        arrayList = restaurantDB_controller.selectRestaurantData();
+
         //어댑터에 리스트 추가
         totalListAdapter.setBrandList(arrayList);
         //어댑터설정
