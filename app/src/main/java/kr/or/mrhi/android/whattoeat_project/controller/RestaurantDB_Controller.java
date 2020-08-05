@@ -18,7 +18,7 @@ import kr.or.mrhi.android.whattoeat_project.model.RestaurantData;
 public class RestaurantDB_Controller extends SQLiteOpenHelper {
 
     private static final String DB_NAME = "WhatToEatDB";
-    private static final int VERSION = 3;
+    private static final int VERSION = 5;
 
     private Context context;
 
@@ -72,6 +72,7 @@ public class RestaurantDB_Controller extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 
         db.execSQL("drop table if exists restaurantTBL");
+        db.execSQL("drop table if exists commentTBL");
         onCreate(db);
     }
 

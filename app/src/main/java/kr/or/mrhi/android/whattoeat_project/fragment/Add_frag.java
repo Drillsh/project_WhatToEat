@@ -128,11 +128,9 @@ public class Add_frag extends Fragment {
                         String address = edtAdress.getText().toString();
                         String category = spinner.getSelectedItem().toString();
                         String phone = edtPhone.getText().toString();
-                        String lati = String.valueOf(latitude);
-                        String longi = String.valueOf(longitude);
 
                         ArrayList<RestaurantData> restaurantData = new ArrayList<>();
-                        restaurantData.add(new RestaurantData(name, category, phone, address, 100, "ss", 2.3f));
+                        restaurantData.add(new RestaurantData(name, category, phone, address, 100, "ss", 2.3f, latitude, longitude));
 
                         if (name.equals("")) {
                             Toast.makeText(v.getContext(), "음식점 이름을 입력해주세요", Toast.LENGTH_SHORT).show();
