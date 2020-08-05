@@ -11,13 +11,14 @@ import androidx.annotation.Nullable;
 
 import java.util.ArrayList;
 
+import kr.or.mrhi.android.whattoeat_project.model.CommentData;
 import kr.or.mrhi.android.whattoeat_project.model.RestaurantData;
 
 // DB 관리 클래스 : 싱글톤
 public class RestaurantDB_Controller extends SQLiteOpenHelper {
 
     private static final String DB_NAME = "WhatToEatDB";
-    private static final int VERSION = 2;
+    private static final int VERSION = 3;
 
     private Context context;
 
@@ -41,6 +42,7 @@ public class RestaurantDB_Controller extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
 
+        // 음식점 정보 DB
         db.execSQL(
                 "CREATE TABLE restaurantTBL(" +
                         "brandName VARCHAR(15) PRIMARY KEY," +
@@ -53,6 +55,16 @@ public class RestaurantDB_Controller extends SQLiteOpenHelper {
                         "latitude DOUBLE(3,8),"+
                         "longitude DOUBLE(3,8));"
         );
+
+        // 음식점 코멘트 정보 테이블
+        db.execSQL(
+                "CREATE TABLE commentTBL(" +
+                        "brandName VARCHAR(15) PRIMARY KEY," +
+                        "imgPath VARCHAR(10)," +
+                        "comment VARCHAR(20)," +
+                        "date VARCHAR(30)," +
+                        "rating FLOAT(2,1));"
+        );
     }
 
     // 버전 바뀌면 테이블 삭제하고 다시 생성
@@ -63,7 +75,7 @@ public class RestaurantDB_Controller extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    // DB Select
+    // 음식점DB Select
     public ArrayList<RestaurantData> selectRestaurantData() {
 
         ArrayList<RestaurantData> restaurantList = new ArrayList<>();
@@ -101,7 +113,7 @@ public class RestaurantDB_Controller extends SQLiteOpenHelper {
     }
 
 
-    // DB 삽입
+    // 음식점DB 삽입
     public boolean insertRestaurantData(ArrayList<RestaurantData> restaurantList) {
 
         boolean retrunValue = false;
@@ -128,7 +140,7 @@ public class RestaurantDB_Controller extends SQLiteOpenHelper {
             retrunValue = true;
 
         } catch (SQLException e) {
-            Log.e("selectData", e.getMessage());
+            Log.e("insertData", e.getMessage());
             retrunValue = false;
 
         } finally {
@@ -138,7 +150,7 @@ public class RestaurantDB_Controller extends SQLiteOpenHelper {
         return retrunValue;
     }
 
-    // DB 삭제
+    // 음식점DB 삭제
     public boolean deleteRestaurantData(RestaurantData restaurantData){
 
         boolean retrunValue = false;
@@ -152,7 +164,7 @@ public class RestaurantDB_Controller extends SQLiteOpenHelper {
             retrunValue = true;
 
         }catch (SQLException e){
-            Log.e("selectData", e.getMessage());
+            Log.e("deleteData", e.getMessage());
             retrunValue = false;
 
         }finally {
@@ -162,5 +174,93 @@ public class RestaurantDB_Controller extends SQLiteOpenHelper {
         return retrunValue;
     }
 
+    // 코멘트 DB select
+    public ArrayList<CommentData> selectCommentDB() {
 
+        ArrayList<CommentData> commentList = new ArrayList<>();
+        SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
+        Cursor cursor = null;
+
+        try {
+            //쿼리문 입력하고 커서 리턴 받음
+            cursor = sqLiteDatabase.rawQuery("select * from commentTBL;", null);
+
+            while (cursor.moveToNext()) {
+                CommentData commentData = new CommentData(
+                        cursor.getString(0),
+                        cursor.getString(1),
+                        cursor.getString(2),
+                        cursor.getString(3),
+                        cursor.getFloat(4)
+                );
+
+                commentList.add(commentData);
+            }
+        } catch (SQLException e) {
+            Log.e("selectCommentData", e.getMessage());
+
+        } finally {
+            cursor.close();
+            sqLiteDatabase.close();
+        }
+
+        return commentList;
+    }
+
+    // 코멘트 DB 삽입
+    public boolean insertCommentData(ArrayList<CommentData> commentList) {
+
+        boolean retrunValue = false;
+        SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
+
+        try {
+            for (CommentData data : commentList) {
+
+                String query = "insert into restaurantTBL values("
+                        + "'" + data.getBrandName() + "',"
+                        + "'" + data.getImgPath() + "',"
+                        + "'" + data.getComment() + "',"
+                        + "'" + data.getDate() + "',"
+                        + data.getRating() +");";
+
+                // 쿼리문 작성해서 넘김
+                // 예외발생시 SQLException
+                sqLiteDatabase.execSQL(query);
+            }
+            retrunValue = true;
+
+        } catch (SQLException e) {
+            Log.e("insertCommentData", e.getMessage());
+            retrunValue = false;
+
+        } finally {
+            sqLiteDatabase.close();
+        }
+
+        return retrunValue;
+    }
+
+    // 코멘트 DB 삭제
+    public boolean deleteCommentData(CommentData commentData){
+
+        boolean retrunValue = false;
+        SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
+
+        try {
+            String query = "delete from commentTBL where brandName = ?";
+
+            sqLiteDatabase.execSQL(query, new String[]{commentData.getBrandName()});
+
+            retrunValue = true;
+
+        }catch (SQLException e){
+            Log.e("deleteCommentData", e.getMessage());
+            retrunValue = false;
+
+        }finally {
+            sqLiteDatabase.close();
+        }
+
+        return retrunValue;
+    }
 }
