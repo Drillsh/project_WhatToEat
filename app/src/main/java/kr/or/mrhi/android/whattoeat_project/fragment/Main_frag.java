@@ -95,7 +95,13 @@ public class Main_frag extends Fragment implements BrandListAdapter.OnItemClickL
 
         // 오늘의 매장 추천
         Random rd = new Random();
-        int position = rd.nextInt(arrayList.size() - 1);
+        int range;
+        if(arrayList.size() == 1){
+            range = 1;
+        }else{
+            range = arrayList.size() - 1;
+        }
+        int position = rd.nextInt(range);
         ArrayList<RestaurantData> todayList = new ArrayList<>();
         todayList.add(arrayList.get(position));
 
