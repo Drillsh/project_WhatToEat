@@ -45,16 +45,18 @@ public class BrandListAdapter extends RecyclerView.Adapter<BrandListAdapter.Cust
     @Override
     public void onBindViewHolder(@NonNull BrandListAdapter.CustomViewHolder customViewHolder, int position) {
 
-        customViewHolder.tvBrandName.setText(brandList.get(position).getBrandName());
-        customViewHolder.tvCategory.setText(brandList.get(position).getCategory());
-        customViewHolder.tvPhoneNum.setText(brandList.get(position).getPhoneNum());
-        customViewHolder.tvAddress.setText(brandList.get(position).getAddress());
-        customViewHolder.tvDistance.setText(brandList.get(position).getDistance()+"m");
-        customViewHolder.startRating.setRating(brandList.get(position).getStarRating());
+        if (!brandList.isEmpty()) {
+            customViewHolder.tvBrandName.setText(brandList.get(position).getBrandName());
+            customViewHolder.tvCategory.setText(brandList.get(position).getCategory());
+            customViewHolder.tvPhoneNum.setText(brandList.get(position).getPhoneNum());
+            customViewHolder.tvAddress.setText(brandList.get(position).getAddress());
+            customViewHolder.tvDistance.setText(brandList.get(position).getDistance() + "m");
+            customViewHolder.startRating.setRating(brandList.get(position).getStarRating());
 
-        // 글자 흘러가게 하기
-        // singleLine = true, ellipsize = marquee 처리도 함께
-        customViewHolder.tvAddress.setSelected(true);
+            // 글자 흘러가게 하기
+            // singleLine = true, ellipsize = marquee 처리도 함께
+            customViewHolder.tvAddress.setSelected(true);
+        }
     }
 
     @Override
@@ -86,7 +88,7 @@ public class BrandListAdapter extends RecyclerView.Adapter<BrandListAdapter.Cust
 
             tvBrandName = (TextView) itemView.findViewById(R.id.tvBrandName);
             tvCategory = (TextView) itemView.findViewById(R.id.tvCategory);
-            tvDistance = (TextView) itemView.findViewById(R.id.tvDistance);
+            tvDistance = (TextView) itemView.findViewById(R.id.tvDesc);
             tvPhoneNum = (TextView) itemView.findViewById(R.id.tvPhoneNum);
             tvAddress = (TextView) itemView.findViewById(R.id.tvAddress);
             startRating = (RatingBar) itemView.findViewById(R.id.starRating);

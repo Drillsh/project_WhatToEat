@@ -42,7 +42,7 @@
             app:srcCompat="@drawable/ic_menu" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/floatingActionButton2"
+            android:id="@+id/fbCurrentPos"
             android:layout_width="105dp"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|end"
@@ -53,7 +53,7 @@
             app:srcCompat="@drawable/ic_menu" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/floatingActionButton3"
+            android:id="@+id/fbAdd"
             android:layout_width="105dp"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|end"

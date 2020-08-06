@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -51,14 +52,6 @@ public class Main_frag extends Fragment implements BrandListAdapter.OnItemClickL
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
         mainActivity = (MainActivity) getContext();
-
-        // 더미 데이터 추가
-        restaurantDataArrayList.add(new RestaurantData("춘향미엔", "중식", "123124",
-                "왕십리asdfasdfasdfasdfasdfasdfsadfasdfasdfasdfasdfasd", 0, "123", 3.5f,54.45451,572.15216454));
-
-        RestaurantDB_Controller restaurantDB_controller;
-        restaurantDB_controller = RestaurantDB_Controller.getInstance(mainActivity);
-        restaurantDB_controller.insertRestaurantData(restaurantDataArrayList);
     }
 
     @Override
@@ -76,55 +69,66 @@ public class Main_frag extends Fragment implements BrandListAdapter.OnItemClickL
         //View 아이디 찾기
         findViewByIdFunc(view);
 
-        // 어댑터 인스턴스
-        BrandListAdapter todayListAdapter = new BrandListAdapter(mainActivity, true);
-        BrandListAdapter nearbyListAdapter = new BrandListAdapter(mainActivity, false);
+        try {
+            // 어댑터 인스턴스
+            BrandListAdapter todayListAdapter = new BrandListAdapter(mainActivity, true);
+            BrandListAdapter nearbyListAdapter = new BrandListAdapter(mainActivity, false);
 
-        // LinearLayoutManager 인스턴스
-        LinearLayoutManager todayListManager = new LinearLayoutManager(mainActivity);
-        LinearLayoutManager nearbyListManager = new LinearLayoutManager(mainActivity);
+            // LinearLayoutManager 인스턴스
+            LinearLayoutManager todayListManager = new LinearLayoutManager(mainActivity);
+            LinearLayoutManager nearbyListManager = new LinearLayoutManager(mainActivity);
 
-        // recyclerview에 어댑터, 매니저 세팅
-        rvTodayBrandList.setAdapter(todayListAdapter);
-        rvTodayBrandList.setLayoutManager(todayListManager);
-        rvNearbyBrandList.setAdapter(nearbyListAdapter);
-        rvNearbyBrandList.setLayoutManager(nearbyListManager);
+            // recyclerview에 어댑터, 매니저 세팅
+            rvTodayBrandList.setAdapter(todayListAdapter);
+            rvTodayBrandList.setLayoutManager(todayListManager);
+            rvNearbyBrandList.setAdapter(nearbyListAdapter);
+            rvNearbyBrandList.setLayoutManager(nearbyListManager);
 
-        // DB에서 데이터 가져옴
-        ArrayList<RestaurantData> arrayList = getRestaurantData();
+            // DB에서 데이터 가져옴
+            ArrayList<RestaurantData> arrayList = getRestaurantData();
+            ArrayList<RestaurantData> todayList = new ArrayList<>();
 
-        // 오늘의 매장 추천
-        Random rd = new Random();
-        int position = rd.nextInt(arrayList.size() - 1);
-        ArrayList<RestaurantData> todayList = new ArrayList<>();
-        todayList.add(arrayList.get(position));
+            // 오늘의 매장 추천
 
-        // 어댑터에 데이터 세팅
-        todayListAdapter.setBrandList(todayList);
-        nearbyListAdapter.setBrandList(arrayList);
+            Random rd = new Random();
+            int position = rd.nextInt(arrayList.size() - 1);
+            todayList.add(arrayList.get(position));
 
-        // 무효화처리
-        todayListAdapter.notifyDataSetChanged();
-        nearbyListAdapter.notifyDataSetChanged();
 
-        // 오늘의 추천 recyclerview 클릭 이벤트
-        todayListAdapter.setOnItemClickListener(new BrandListAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(View v, int pos) {
-                Intent intent = new Intent(getActivity(), RestaurantActivity.class);
-                intent.putExtra("todayList", position);
-                startActivity(intent);
+            if (!todayList.isEmpty() || !arrayList.isEmpty()) {
+
+                // 어댑터에 데이터 세팅
+                todayListAdapter.setBrandList(todayList);
+                nearbyListAdapter.setBrandList(arrayList);
+
+                // 무효화처리
+                todayListAdapter.notifyDataSetChanged();
+                nearbyListAdapter.notifyDataSetChanged();
             }
-        });
-        // 근처 음식점 recyclerview 클릭 이벤트
-        nearbyListAdapter.setOnItemClickListener(new BrandListAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(View v, int pos) {
-                Intent intent = new Intent(getActivity(), RestaurantActivity.class);
-                intent.putExtra("nearbyList", pos);
-                startActivity(intent);
-            }
-        });
+
+            // 오늘의 추천 recyclerview 클릭 이벤트
+            todayListAdapter.setOnItemClickListener(new BrandListAdapter.OnItemClickListener() {
+                @Override
+                public void onItemClick(View v, int pos) {
+                    Intent intent = new Intent(getActivity(), RestaurantActivity.class);
+                    intent.putExtra("todayList", position);
+                    startActivity(intent);
+                }
+            });
+            // 근처 음식점 recyclerview 클릭 이벤트
+            nearbyListAdapter.setOnItemClickListener(new BrandListAdapter.OnItemClickListener() {
+                @Override
+                public void onItemClick(View v, int pos) {
+                    Intent intent = new Intent(getActivity(), RestaurantActivity.class);
+                    intent.putExtra("nearbyList", pos);
+                    startActivity(intent);
+                }
+            });
+
+        } catch (Exception e) {
+            Log.e("error", e.getMessage());
+        }
+
 
         return view;
     }
@@ -154,18 +158,18 @@ public class Main_frag extends Fragment implements BrandListAdapter.OnItemClickL
                 startActivity(intent);
                 break;
 
-             // 지도 버튼 클릭
+            // 지도 버튼 클릭
             case R.id.btnGoMap:
                 Intent intentMap = new Intent(mainActivity, MapActivity.class);
 
                 startActivity(intentMap);
                 break;
 
-            case R.id.ibSearch :
+            case R.id.ibSearch:
                 //웹 검색 액티비티로 이동
                 Intent intentSearch = new Intent(getActivity(), WebSearchActivity.class);
                 //edtSearch 입력값 넘겨줌
-                intentSearch.putExtra("name",edtSearch.getText().toString());
+                intentSearch.putExtra("name", edtSearch.getText().toString());
                 startActivity(intentSearch);
                 break;
 
@@ -227,6 +231,7 @@ public class Main_frag extends Fragment implements BrandListAdapter.OnItemClickL
 
     // recyclerview 아이템 클릭 오버라이드
     @Override
-    public void onItemClick(View v, int pos) {}
+    public void onItemClick(View v, int pos) {
+    }
 
 }
