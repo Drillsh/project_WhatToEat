@@ -18,7 +18,7 @@ import kr.or.mrhi.android.whattoeat_project.model.RestaurantData;
 public class RestaurantDB_Controller extends SQLiteOpenHelper {
 
     private static final String DB_NAME = "WhatToEatDB";
-    private static final int VERSION = 5;
+    private static final int VERSION = 6;
 
     private Context context;
 
@@ -59,7 +59,7 @@ public class RestaurantDB_Controller extends SQLiteOpenHelper {
         // 음식점 코멘트 정보 테이블
         db.execSQL(
                 "CREATE TABLE commentTBL(" +
-                        "brandName VARCHAR(15) PRIMARY KEY," +
+                        "brandName VARCHAR(15)," +
                         "imgPath VARCHAR(10)," +
                         "comment VARCHAR(20)," +
                         "date VARCHAR(30)," +
@@ -217,7 +217,7 @@ public class RestaurantDB_Controller extends SQLiteOpenHelper {
         try {
             for (CommentData data : commentList) {
 
-                String query = "insert into restaurantTBL values("
+                String query = "insert into commentTBL values("
                         + "'" + data.getBrandName() + "',"
                         + "'" + data.getImgPath() + "',"
                         + "'" + data.getComment() + "',"
