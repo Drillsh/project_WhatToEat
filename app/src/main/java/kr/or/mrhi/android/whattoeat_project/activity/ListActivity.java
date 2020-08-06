@@ -55,9 +55,13 @@ public class ListActivity extends AppCompatActivity implements View.OnClickListe
     private void setInitListener() {
         //초기화
         arrayList = new ArrayList<RestaurantData>();
-        restaurantDB_controller = RestaurantDB_Controller.getInstance(getApplicationContext());
         totalListAdapter = new TotalListAdapter(getApplicationContext());
         linearLayoutManager = new LinearLayoutManager(getApplicationContext());
+
+        // DB에서 리스트 가져옴
+        restaurantDB_controller = RestaurantDB_Controller.getInstance(getApplicationContext());
+        arrayList = restaurantDB_controller.selectRestaurantData();
+
         //이벤트 등록
         ibHome.setOnClickListener(this);
         totalListAdapter.setOnItemClickListener(this);
