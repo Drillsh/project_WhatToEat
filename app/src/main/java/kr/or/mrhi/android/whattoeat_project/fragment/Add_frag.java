@@ -45,7 +45,10 @@ public class Add_frag extends Fragment {
 
     private MainActivity mainActivity;
     private ImageView gpsMarker;
+
     private FloatingActionButton fbMenu;
+    private FloatingActionButton fbAdd;
+    private FloatingActionButton fbCurrentPos;
 
     @Override
     public void onAttach(@NonNull Context context) {

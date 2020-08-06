@@ -176,7 +176,7 @@ public class RestaurantDB_Controller extends SQLiteOpenHelper {
     }
 
     // 코멘트 DB select
-    public ArrayList<CommentData> selectCommentDB() {
+    public ArrayList<CommentData> selectCommentDB(String brandName) {
 
         ArrayList<CommentData> commentList = new ArrayList<>();
         SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
@@ -184,10 +184,10 @@ public class RestaurantDB_Controller extends SQLiteOpenHelper {
 
         try {
             //쿼리문 입력하고 커서 리턴 받음
-            cursor = sqLiteDatabase.rawQuery("select * from commentTBL;", null);
+            cursor = sqLiteDatabase.rawQuery("select * from commentTBL where brandName = ?;", new String[]{brandName});
 
             while (cursor.moveToNext()) {
-                CommentData commentData = new CommentData(
+                CommentData data = new CommentData(
                         cursor.getString(0),
                         cursor.getString(1),
                         cursor.getString(2),
@@ -195,7 +195,7 @@ public class RestaurantDB_Controller extends SQLiteOpenHelper {
                         cursor.getFloat(4)
                 );
 
-                commentList.add(commentData);
+                commentList.add(data);
             }
         } catch (SQLException e) {
             Log.e("selectCommentData", e.getMessage());
@@ -209,13 +209,12 @@ public class RestaurantDB_Controller extends SQLiteOpenHelper {
     }
 
     // 코멘트 DB 삽입
-    public boolean insertCommentData(ArrayList<CommentData> commentList) {
+    public boolean insertCommentData(CommentData data) {
 
         boolean retrunValue = false;
         SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
 
         try {
-            for (CommentData data : commentList) {
 
                 String query = "insert into commentTBL values("
                         + "'" + data.getBrandName() + "',"
@@ -227,7 +226,7 @@ public class RestaurantDB_Controller extends SQLiteOpenHelper {
                 // 쿼리문 작성해서 넘김
                 // 예외발생시 SQLException
                 sqLiteDatabase.execSQL(query);
-            }
+
             retrunValue = true;
 
         } catch (SQLException e) {
@@ -248,9 +247,9 @@ public class RestaurantDB_Controller extends SQLiteOpenHelper {
         SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
 
         try {
-            String query = "delete from commentTBL where brandName = ?";
+            String query = "delete from commentTBL where brandName = ? AND comment = ? AND date = ? AND rating = ?";
 
-            sqLiteDatabase.execSQL(query, new String[]{commentData.getBrandName()});
+            sqLiteDatabase.execSQL(query, new String[]{commentData.getBrandName(), commentData.getComment(), commentData.getDate(), String.valueOf(commentData.getRating())});
 
             retrunValue = true;
 

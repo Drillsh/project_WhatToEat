@@ -30,10 +30,10 @@ public class ViewPagerAdapter extends PagerAdapter {
         LayoutInflater layoutInflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View view=layoutInflater.inflate(R.layout.main_item,null);
 
-        ImageView ivBrandImg = view.findViewById(R.id.ivBrandImg);
+        ImageView ivBrandImg = view.findViewById(R.id.ivImage);
         TextView tvBrandName = view.findViewById(R.id.tvBrandName);
         TextView tvCategory = view.findViewById(R.id.tvCategory);
-        TextView tvDistance = view.findViewById(R.id.tvDistance);
+        TextView tvDistance = view.findViewById(R.id.tvDesc);
         TextView tvPhoneNum = view.findViewById(R.id.tvPhoneNum);
         TextView tvAddress = view.findViewById(R.id.tvAddress);
         tvAddress.setSelected(true);

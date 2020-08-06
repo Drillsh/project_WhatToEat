@@ -86,7 +86,7 @@ public class TotalListAdapter extends RecyclerView.Adapter<TotalListAdapter.Cust
 
             tvEateryName = (TextView) itemView.findViewById(R.id.tvEateryName);
             tvFoodMenu = (TextView) itemView.findViewById(R.id.tvFoodMenu);
-            tvDistance = (TextView) itemView.findViewById(R.id.tvDistance);
+            tvDistance = (TextView) itemView.findViewById(R.id.tvDesc);
             tvCallNumber = (TextView) itemView.findViewById(R.id.tvCallNumber);
             tvAddress = (TextView) itemView.findViewById(R.id.tvAddress);
 
