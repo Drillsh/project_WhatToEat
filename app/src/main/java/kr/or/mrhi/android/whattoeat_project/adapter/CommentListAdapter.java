@@ -9,6 +9,7 @@ import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RatingBar;
@@ -32,6 +33,7 @@ public class CommentListAdapter extends RecyclerView.Adapter<CommentListAdapter.
     private ArrayList<CommentData> commentList = new ArrayList<>();
 
     private BrandListAdapter.OnItemClickListener mListener = null;
+    private OnLongClickListener mLongListener = null;
 
     //생성자
     public CommentListAdapter(Context context) {
@@ -51,6 +53,7 @@ public class CommentListAdapter extends RecyclerView.Adapter<CommentListAdapter.
     @Override
     public void onBindViewHolder(@NonNull CommentListAdapter.CustomViewHolder customViewHolder, int position) {
         RestaurantDB_Controller restaurantDBController = RestaurantDB_Controller.getInstance(context);
+
         ArrayList<CommentData> arrayList = restaurantDBController.selectCommentDB();
         Bitmap bitmap = null;
         Uri uri1 = Uri.parse(arrayList.get(position).getImgPath());
@@ -73,22 +76,32 @@ public class CommentListAdapter extends RecyclerView.Adapter<CommentListAdapter.
         return commentList != null ? commentList.size() : 0;
     }
 
+
     // 리사이클러뷰 클릭 이벤트를 위한 인터페이스
     public interface OnItemClickListener {
         void onItemClick(View v, int pos);
+    }
+
+    // 리사이클러뷰 롱클릭 이벤트 인터페이스
+    public interface OnLongClickListener {
+        void onItemLongClick(View view, int position);
     }
 
     // OnItemClickListener 객체 참조를 어댑터에 전달하는 메서드
     public void setOnItemClickListener(OnItemClickListener listener) {
 
     }
+    // OnLongClickListener 객체 참조를 어댑터에 전달하는 메서드
+    public void setOnLongClickListener(OnLongClickListener longListener) {
+        this.mLongListener = longListener;
+    }
+
 
     public class CustomViewHolder extends RecyclerView.ViewHolder {
         TextView tvDate;
         TextView tvEditComment;
         TextView tvComment;
         ImageView imageView2;
-        Button btnDeleteComment;
         RatingBar rbListRating;
 
         public CustomViewHolder(@NonNull View itemView) {
@@ -98,24 +111,9 @@ public class CommentListAdapter extends RecyclerView.Adapter<CommentListAdapter.
             tvEditComment = itemView.findViewById(R.id.tvEditComment);
             tvComment = itemView.findViewById(R.id.tvComment);
             imageView2 = itemView.findViewById(R.id.imageView2);
-            btnDeleteComment = itemView.findViewById(R.id.btnDeleteComment);
             rbListRating = itemView.findViewById(R.id.rbListRating);
 
-            btnDeleteComment.setOnClickListener(new View.OnClickListener() {
-                @RequiresApi(api = Build.VERSION_CODES.N)
-                @Override
-                public void onClick(View view) {
-//                    RestaurantDB_Controller restaurantDBController = RestaurantDB_Controller.getInstance(context);
-//
-//                    boolean returnValue = restaurantDBController.deleteCommentData()
-//
-//                    if (returnValue) {
-//                        Function.settingToast(context, "데이터 삭제 성공");
-//                    } else {
-//                        Function.settingToast(context, "데이터 삭제 실패");
-//                    }
-                }
-            });
+
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -125,6 +123,17 @@ public class CommentListAdapter extends RecyclerView.Adapter<CommentListAdapter.
 
                         mListener.onItemClick(view, pos);
                     }
+                }
+            });
+
+            itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View view) {
+                    int pos = getAdapterPosition();
+                    if (pos != RecyclerView.NO_POSITION) {
+                        mLongListener.onItemLongClick(view,pos);
+                    }
+                    return true;
                 }
             });
         }

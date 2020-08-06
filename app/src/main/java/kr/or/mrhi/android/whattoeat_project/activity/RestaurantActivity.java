@@ -40,7 +40,7 @@ import kr.or.mrhi.android.whattoeat_project.function.Function;
 import kr.or.mrhi.android.whattoeat_project.model.CommentData;
 import kr.or.mrhi.android.whattoeat_project.model.RestaurantData;
 
-public class RestaurantActivity extends AppCompatActivity implements View.OnClickListener{
+public class RestaurantActivity extends AppCompatActivity implements View.OnClickListener, CommentListAdapter.OnLongClickListener{
     private TextView tvRestName, tvRestAdress, tvRestContact;
     private Button btnRestCall, btnRestLocation, btnAddComment;
     private RatingBar rbTotal;
@@ -50,8 +50,9 @@ public class RestaurantActivity extends AppCompatActivity implements View.OnClic
     private RestaurantGalleryAdapter restaurantGalleryAdapter;
 
     private ArrayList<RestaurantData> restList = new ArrayList<>();
-    private ArrayList<CommentData> commentArrayList = new ArrayList<>();
+    //private ArrayList<CommentData> commentArrayList = new ArrayList<>();
     RestaurantDB_Controller commentDB = RestaurantDB_Controller.getInstance(RestaurantActivity.this);
+
     CommentListAdapter commentListAdapter;
     RestaurantData restaurantData;
 
@@ -76,8 +77,7 @@ public class RestaurantActivity extends AppCompatActivity implements View.OnClic
         position = intent.getIntExtra("nearbyList",0);
 
         //DB에 저장된 업체정보를 가져와서 ArrayList에 저장
-        RestaurantDB_Controller restaurantDBController = RestaurantDB_Controller.getInstance(getApplicationContext());
-        restList = restaurantDBController.selectRestaurantData();
+        restList = commentDB.selectRestaurantData();
 
         //ArrayList에 저장된 업체 중 MainFrag 리스트에서 선택된 업체정보를 받아옴
         restaurantData = restList.get(position);
@@ -93,11 +93,14 @@ public class RestaurantActivity extends AppCompatActivity implements View.OnClic
         commentListAdapter = new CommentListAdapter(getApplicationContext());
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
 
-        commentArrayList = commentDB.selectCommentDB();
+        ArrayList<CommentData> commentArrayList = commentDB.selectCommentDB(restaurantData.getBrandName());
         commentListAdapter.setCommentList(commentArrayList);
 
         commentList.setAdapter(commentListAdapter);
         commentList.setLayoutManager(linearLayoutManager);
+
+        commentListAdapter.setOnLongClickListener(this);
+        commentListAdapter.notifyDataSetChanged();
 
         rbTotal.setEnabled(false);
     }
@@ -166,28 +169,24 @@ public class RestaurantActivity extends AppCompatActivity implements View.OnClic
                         String date = new SimpleDateFormat("yyyy년 MM월 dd일 EE요일", Locale.getDefault()).format(today);
 
                         CommentData commentData = new CommentData(restaurantData.getBrandName(),commetImage,comment,date,rating);
+                        ArrayList<CommentData> commentArrayList = new ArrayList<CommentData>();
                         commentArrayList.add(commentData);
 
-                        commentDB = RestaurantDB_Controller.getInstance(getApplicationContext());
+                        boolean returnValue = commentDB.insertCommentData(commentData);
 
-                        boolean returnValue = commentDB.insertCommentData(commentArrayList);
                         if (returnValue) {
                             Function.settingToast(getApplicationContext(), "데이터 삽입 성공");
-                            commentArrayList= commentDB.selectCommentDB();
-                            commentListAdapter.setCommentList(commentArrayList);
-                            commentListAdapter.notifyDataSetChanged();
+
                         } else {
                             Function.settingToast(getApplicationContext(), "데이터 삽입 실패");
                         }
+
+                        commentListAdapter.setCommentList(commentArrayList);
+                        commentListAdapter.notifyDataSetChanged();
                     }
                 });
 
-                dialog.setNegativeButton("취소", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-
-                    }
-                });
+                dialog.setNegativeButton("취소", null);
 
                 dialog.show();
 
@@ -211,5 +210,32 @@ public class RestaurantActivity extends AppCompatActivity implements View.OnClic
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void onItemLongClick(View view, int position) {
+        final android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(RestaurantActivity.this);
+        builder.setTitle("목록에서 삭제하시겠습니까?");
+        //"예"누를시 적용되는 이벤트 처리
+        builder.setPositiveButton("예", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+
+                ArrayList<CommentData> commentArrayList = commentDB.selectCommentDB();
+                CommentData commentData = commentArrayList.get(position);
+                commentDB.deleteCommentData(commentData);
+                commentArrayList.remove(position);
+                commentListAdapter.setCommentList(commentArrayList);
+                commentListAdapter.notifyDataSetChanged();
+            }
+        });
+        //"아니요" 누를 시 적용되는 이벤트 등록 처리
+        builder.setNegativeButton("아니요", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.dismiss();
+            }
+        });
+        builder.show();
     }
 }

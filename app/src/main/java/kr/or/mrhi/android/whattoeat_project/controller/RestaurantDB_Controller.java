@@ -175,7 +175,7 @@ public class RestaurantDB_Controller extends SQLiteOpenHelper {
         return retrunValue;
     }
 
-    // 코멘트 DB select
+    // 코멘트 DB 특정 음식점만 가져오는 select
     public ArrayList<CommentData> selectCommentDB(String brandName) {
 
         ArrayList<CommentData> commentList = new ArrayList<>();
@@ -208,6 +208,39 @@ public class RestaurantDB_Controller extends SQLiteOpenHelper {
         return commentList;
     }
 
+    // 코멘트 DB 전체를 가져오는 select
+    public ArrayList<CommentData> selectCommentDB() {
+
+        ArrayList<CommentData> commentList = new ArrayList<>();
+        SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
+        Cursor cursor = null;
+
+        try {
+            //쿼리문 입력하고 커서 리턴 받음
+            cursor = sqLiteDatabase.rawQuery("select * from commentTBL;", null);
+
+            while (cursor.moveToNext()) {
+                CommentData data = new CommentData(
+                        cursor.getString(0),
+                        cursor.getString(1),
+                        cursor.getString(2),
+                        cursor.getString(3),
+                        cursor.getFloat(4)
+                );
+
+                commentList.add(data);
+            }
+        } catch (SQLException e) {
+            Log.e("selectCommentData", e.getMessage());
+
+        } finally {
+            cursor.close();
+            sqLiteDatabase.close();
+        }
+
+        return commentList;
+    }
+
     // 코멘트 DB 삽입
     public boolean insertCommentData(CommentData data) {
 
@@ -215,7 +248,6 @@ public class RestaurantDB_Controller extends SQLiteOpenHelper {
         SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
 
         try {
-
                 String query = "insert into commentTBL values("
                         + "'" + data.getBrandName() + "',"
                         + "'" + data.getImgPath() + "',"
