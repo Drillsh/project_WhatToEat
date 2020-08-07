@@ -1,22 +1,17 @@
 package kr.or.mrhi.android.whattoeat_project.adapter;
 
-import android.Manifest;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
-import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.io.FileNotFoundException;
@@ -25,14 +20,14 @@ import java.util.ArrayList;
 
 import kr.or.mrhi.android.whattoeat_project.R;
 import kr.or.mrhi.android.whattoeat_project.controller.RestaurantDB_Controller;
-import kr.or.mrhi.android.whattoeat_project.function.Function;
 import kr.or.mrhi.android.whattoeat_project.model.CommentData;
 
+// 코멘트 데이터 어댑터
 public class CommentListAdapter extends RecyclerView.Adapter<CommentListAdapter.CustomViewHolder> {
     private Context context;
     private ArrayList<CommentData> commentList = new ArrayList<>();
 
-    private BrandListAdapter.OnItemClickListener mListener = null;
+//    private OnItemClickListener mListener = null;
     private OnLongClickListener mLongListener = null;
 
     //생성자
@@ -45,7 +40,6 @@ public class CommentListAdapter extends RecyclerView.Adapter<CommentListAdapter.
     public CommentListAdapter.CustomViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
         View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.restaurant_list, viewGroup, false);
         CommentListAdapter.CustomViewHolder viewHolder = new CustomViewHolder(view);
-
 
         return viewHolder;
     }
@@ -115,16 +109,16 @@ public class CommentListAdapter extends RecyclerView.Adapter<CommentListAdapter.
 
 
 
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    int pos = getAdapterPosition();
-                    if (pos != RecyclerView.NO_POSITION) {
-
-                        mListener.onItemClick(view, pos);
-                    }
-                }
-            });
+//            itemView.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View view) {
+//                    int pos = getAdapterPosition();
+//                    if (pos != RecyclerView.NO_POSITION) {
+//
+//                        mListener.onItemClick(view, pos);
+//                    }
+//                }
+//            });
 
             itemView.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
@@ -147,12 +141,12 @@ public class CommentListAdapter extends RecyclerView.Adapter<CommentListAdapter.
         this.commentList = commentList;
     }
 
-    public BrandListAdapter.OnItemClickListener getmListener() {
-        return mListener;
-    }
-
-    public void setmListener(BrandListAdapter.OnItemClickListener mListener) {
-        this.mListener = mListener;
-    }
+//    public OnItemClickListener getmListener() {
+//        return mListener;
+//    }
+//
+//    public void setmListener(OnItemClickListener mListener) {
+//        this.mListener = mListener;
+//    }
 
 }

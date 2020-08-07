@@ -15,7 +15,6 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -46,14 +45,13 @@ public class RestaurantActivity extends AppCompatActivity implements View.OnClic
     private RatingBar rbTotal;
     private Gallery gallery;
     private RecyclerView commentList;
-    //private CommentListAdapter commentListAdapter;
+    private CommentListAdapter commentListAdapter;
     private RestaurantGalleryAdapter restaurantGalleryAdapter;
 
     private ArrayList<RestaurantData> restList = new ArrayList<>();
-    //private ArrayList<CommentData> commentArrayList = new ArrayList<>();
+    private ArrayList<CommentData> commentArrayList = new ArrayList<>();
     RestaurantDB_Controller commentDB = RestaurantDB_Controller.getInstance(RestaurantActivity.this);
 
-    CommentListAdapter commentListAdapter;
     RestaurantData restaurantData;
 
     private final int GET_GALLERY_IMAGE = 1;
@@ -63,6 +61,7 @@ public class RestaurantActivity extends AppCompatActivity implements View.OnClic
     EditText etComment;
     RatingBar rbRecommed;
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -73,8 +72,7 @@ public class RestaurantActivity extends AppCompatActivity implements View.OnClic
 
         //MainFrag 리스트에서 사용자가 선택한 리스트의 위치정보 받아오기
         Intent intent = getIntent();
-        int position;
-        position = intent.getIntExtra("nearbyList",0);
+        int position = intent.getIntExtra("nearbyList",0);
 
         //DB에 저장된 업체정보를 가져와서 ArrayList에 저장
         restList = commentDB.selectRestaurantData();
@@ -93,14 +91,17 @@ public class RestaurantActivity extends AppCompatActivity implements View.OnClic
         commentListAdapter = new CommentListAdapter(getApplicationContext());
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
 
-        ArrayList<CommentData> commentArrayList = commentDB.selectCommentDB(restaurantData.getBrandName());
+        // 상호명으로 음식점의 코멘트 정보 가져옴
+        commentArrayList = commentDB.selectCommentDB(restaurantData.getBrandName());
+
         commentListAdapter.setCommentList(commentArrayList);
+        commentListAdapter.notifyDataSetChanged();
 
         commentList.setAdapter(commentListAdapter);
         commentList.setLayoutManager(linearLayoutManager);
 
         commentListAdapter.setOnLongClickListener(this);
-        commentListAdapter.notifyDataSetChanged();
+
 
         rbTotal.setEnabled(false);
     }
@@ -169,7 +170,6 @@ public class RestaurantActivity extends AppCompatActivity implements View.OnClic
                         String date = new SimpleDateFormat("yyyy년 MM월 dd일 EE요일", Locale.getDefault()).format(today);
 
                         CommentData commentData = new CommentData(restaurantData.getBrandName(),commetImage,comment,date,rating);
-                        ArrayList<CommentData> commentArrayList = new ArrayList<CommentData>();
                         commentArrayList.add(commentData);
 
                         boolean returnValue = commentDB.insertCommentData(commentData);
@@ -182,12 +182,12 @@ public class RestaurantActivity extends AppCompatActivity implements View.OnClic
                         }
 
                         commentListAdapter.setCommentList(commentArrayList);
+                        commentList.setAdapter(commentListAdapter);
                         commentListAdapter.notifyDataSetChanged();
                     }
                 });
 
                 dialog.setNegativeButton("취소", null);
-
                 dialog.show();
 
                 break;
@@ -221,11 +221,9 @@ public class RestaurantActivity extends AppCompatActivity implements View.OnClic
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
 
-                ArrayList<CommentData> commentArrayList = commentDB.selectCommentDB();
                 CommentData commentData = commentArrayList.get(position);
                 commentDB.deleteCommentData(commentData);
                 commentArrayList.remove(position);
-                commentListAdapter.setCommentList(commentArrayList);
                 commentListAdapter.notifyDataSetChanged();
             }
         });
