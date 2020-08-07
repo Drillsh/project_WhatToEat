@@ -90,22 +90,17 @@ public class Main_frag extends Fragment implements BrandListAdapter.OnItemClickL
             ArrayList<RestaurantData> todayList = new ArrayList<>();
 
             // 오늘의 매장 추천
-
             Random rd = new Random();
-            int position = rd.nextInt(arrayList.size() - 1);
+            int position = rd.nextInt(arrayList.size());
             todayList.add(arrayList.get(position));
 
+            // 어댑터에 데이터 세팅
+            todayListAdapter.setBrandList(todayList);
+            nearbyListAdapter.setBrandList(arrayList);
 
-            if (!todayList.isEmpty() || !arrayList.isEmpty()) {
-
-                // 어댑터에 데이터 세팅
-                todayListAdapter.setBrandList(todayList);
-                nearbyListAdapter.setBrandList(arrayList);
-
-                // 무효화처리
-                todayListAdapter.notifyDataSetChanged();
-                nearbyListAdapter.notifyDataSetChanged();
-            }
+            // 무효화처리
+            todayListAdapter.notifyDataSetChanged();
+            nearbyListAdapter.notifyDataSetChanged();
 
             // 오늘의 추천 recyclerview 클릭 이벤트
             todayListAdapter.setOnItemClickListener(new BrandListAdapter.OnItemClickListener() {
@@ -129,7 +124,6 @@ public class Main_frag extends Fragment implements BrandListAdapter.OnItemClickL
         } catch (Exception e) {
             Log.e("error", e.getMessage());
         }
-
 
         return view;
     }

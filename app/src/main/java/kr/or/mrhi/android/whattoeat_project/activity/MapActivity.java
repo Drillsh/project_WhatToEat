@@ -5,6 +5,7 @@ import androidx.viewpager.widget.ViewPager;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -121,12 +122,15 @@ public class MapActivity extends AppCompatActivity implements View.OnClickListen
              markerList.add(marker);
          }
 
-        MapPOIItem mapPOIItem = markerList.get(0);
-        // 해당 좌표로 화면 중심 이동
-        mapView.setMapCenterPoint(mapPOIItem.getMapPoint(), true);
-        // 특정 POI(Point Of Interest: 좌표) item 선택
-        mapView.selectPOIItem(mapPOIItem, true);
-
+         try {
+             MapPOIItem mapPOIItem = markerList.get(0);
+             // 해당 좌표로 화면 중심 이동
+             mapView.setMapCenterPoint(mapPOIItem.getMapPoint(), true);
+             // 특정 POI(Point Of Interest: 좌표) item 선택
+             mapView.selectPOIItem(mapPOIItem, true);
+         }catch (IndexOutOfBoundsException e){
+             Log.d("MapActivity", e.getMessage());
+         }
     }
 
     // 뷰 객체 찾기

@@ -18,7 +18,7 @@ import kr.or.mrhi.android.whattoeat_project.model.RestaurantData;
 public class RestaurantDB_Controller extends SQLiteOpenHelper {
 
     private static final String DB_NAME = "WhatToEatDB";
-    private static final int VERSION = 5;
+    private static final int VERSION = 6;
 
     private Context context;
 
@@ -59,7 +59,7 @@ public class RestaurantDB_Controller extends SQLiteOpenHelper {
         // 음식점 코멘트 정보 테이블
         db.execSQL(
                 "CREATE TABLE commentTBL(" +
-                        "brandName VARCHAR(15) PRIMARY KEY," +
+                        "brandName VARCHAR(15)," +
                         "imgPath VARCHAR(10)," +
                         "comment VARCHAR(20)," +
                         "date VARCHAR(30)," +
@@ -175,7 +175,7 @@ public class RestaurantDB_Controller extends SQLiteOpenHelper {
         return retrunValue;
     }
 
-    // 코멘트 DB select
+    // 코멘트 DB 특정 음식점만 가져오는 select
     public ArrayList<CommentData> selectCommentDB(String brandName) {
 
         ArrayList<CommentData> commentList = new ArrayList<>();
@@ -185,6 +185,39 @@ public class RestaurantDB_Controller extends SQLiteOpenHelper {
         try {
             //쿼리문 입력하고 커서 리턴 받음
             cursor = sqLiteDatabase.rawQuery("select * from commentTBL where brandName = ?;", new String[]{brandName});
+
+            while (cursor.moveToNext()) {
+                CommentData data = new CommentData(
+                        cursor.getString(0),
+                        cursor.getString(1),
+                        cursor.getString(2),
+                        cursor.getString(3),
+                        cursor.getFloat(4)
+                );
+
+                commentList.add(data);
+            }
+        } catch (SQLException e) {
+            Log.e("selectCommentData", e.getMessage());
+
+        } finally {
+            cursor.close();
+            sqLiteDatabase.close();
+        }
+
+        return commentList;
+    }
+
+    // 코멘트 DB 전체를 가져오는 select
+    public ArrayList<CommentData> selectCommentDB() {
+
+        ArrayList<CommentData> commentList = new ArrayList<>();
+        SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
+        Cursor cursor = null;
+
+        try {
+            //쿼리문 입력하고 커서 리턴 받음
+            cursor = sqLiteDatabase.rawQuery("select * from commentTBL;", null);
 
             while (cursor.moveToNext()) {
                 CommentData data = new CommentData(

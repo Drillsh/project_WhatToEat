@@ -62,6 +62,12 @@ public class Add_frag extends Fragment {
         mainActivity = null;
     }
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+    }
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -77,17 +83,17 @@ public class Add_frag extends Fragment {
         // 카카오맵 인스턴스
         MapView mapView = new MapView(mainActivity);
 
-//        // GpsTracker 인스턴스
-//        GpsTracker gpsTracker = new GpsTracker(view.getContext());
-//
-//        // 현재 좌표
-//        double latitude = gpsTracker.getLatitude();
-//        double longitude = gpsTracker.getLongitude();
-//
-//        // 현재 좌표로 맵이동
-//        MapPoint mapPoint = MapPoint.mapPointWithGeoCoord(latitude, longitude);
-//        mapView.setMapCenterPoint(mapPoint,true);
-//        mapView.setZoomLevel(-1,true);
+        // GpsTracker 인스턴스
+        GpsTracker gpsTracker = new GpsTracker(view.getContext());
+
+        // 현재 좌표
+        double latitude = gpsTracker.getLatitude();
+        double longitude = gpsTracker.getLongitude();
+
+        // 현재 좌표로 맵이동
+        MapPoint mapPoint = MapPoint.mapPointWithGeoCoord(latitude, longitude);
+        mapView.setMapCenterPoint(mapPoint,true);
+        mapView.setZoomLevel(-1,true);
 
         // 뷰에 카카오맵 세팅
         map_view.addView(mapView);

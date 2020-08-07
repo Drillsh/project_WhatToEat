@@ -1,5 +1,7 @@
 package kr.or.mrhi.android.whattoeat_project.model;
 
+import android.graphics.Bitmap;
+
 // 코멘트 정보를 담는 모델
 public class CommentData {
 
