@@ -24,6 +24,8 @@ public class WebSearchActivity extends AppCompatActivity {
 
         webView = findViewById(R.id.webView);
 
+
+
         //WebView 실행 (카카오맵 검색 URL)
         webView.loadUrl("https://m.map.kakao.com/actions/searchView?q="+str+"&wxEnc=MOQRRM&wyEnc=QNLUPUS&lvl=7&rcode=I10151300");
         webView.setWebViewClient(new WebViewClientClass());
@@ -36,5 +38,7 @@ public class WebSearchActivity extends AppCompatActivity {
             view.loadUrl(url);
             return true;
         }
+
+
     }
 }

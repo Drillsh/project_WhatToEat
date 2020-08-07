@@ -48,14 +48,18 @@ public class CommentListAdapter extends RecyclerView.Adapter<CommentListAdapter.
         RestaurantDB_Controller restaurantDBController = RestaurantDB_Controller.getInstance(context);
 
         Bitmap bitmap = null;
-        Uri uri1 = Uri.parse(commentList.get(position).getImgPath());
+        /*Uri uri1 = Uri.parse(commentList.get(position).getImgPath());
 
         try {
             InputStream in = context.getContentResolver().openInputStream(uri1);
             bitmap = BitmapFactory.decodeStream(in);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
-        }
+        }*/
+        //지정폴더에서  path값으로 비트맵을 만든다.
+        BitmapFactory.Options bfo = new BitmapFactory.Options();
+        bfo.inSampleSize = 2;
+        bitmap = BitmapFactory.decodeFile(commentList.get(position).getImgPath(),bfo);
 
         customViewHolder.tvDate.setText(commentList.get(position).getDate());
         customViewHolder.tvEditComment.setText(commentList.get(position).getComment());

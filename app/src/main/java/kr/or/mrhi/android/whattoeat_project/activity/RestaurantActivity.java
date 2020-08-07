@@ -9,12 +9,15 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -23,7 +26,11 @@ import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -55,6 +62,8 @@ public class RestaurantActivity extends AppCompatActivity implements View.OnClic
     RestaurantData restaurantData;
 
     private final int GET_GALLERY_IMAGE = 1;
+    private String gImgPath;
+    private String fileName;
     Uri uri;
     ImageView ivCommentImage;
     Button btnCommentImage;
@@ -164,9 +173,13 @@ public class RestaurantActivity extends AppCompatActivity implements View.OnClic
                     @RequiresApi(api = Build.VERSION_CODES.N)
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
+                        /*String downPath = getSaveFolder().getAbsolutePath();
+                        Log.d("다운로드 패스",downPath);*/
+                        getSaveFolder();
+                        copyImageFile();
                         String comment = etComment.getText().toString();
                         float rating = rbRecommed.getRating();
-                        String commetImage = uri.toString();
+                        String commetImage = getSaveFolder().getAbsolutePath()+"/"+fileName;
                         Date today = Calendar.getInstance().getTime();
                         String date = new SimpleDateFormat("yyyy년 MM월 dd일 EE요일", Locale.getDefault()).format(today);
 
@@ -199,10 +212,12 @@ public class RestaurantActivity extends AppCompatActivity implements View.OnClic
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == GET_GALLERY_IMAGE) {
             uri = data.getData();
+            fileName = getImageNameToUri(uri);
+            Log.d("사진 파일명","파일명: "+fileName+"이미지 path: "+gImgPath+"uri 값: "+uri.toString());
             setImage(uri);
         }
     }
-
+    //이미지뷰에 uri를 통해 비트맵생성후 세팅
     private void setImage(Uri uri){
         try {
             InputStream in = getContentResolver().openInputStream(uri);
@@ -236,5 +251,53 @@ public class RestaurantActivity extends AppCompatActivity implements View.OnClic
             }
         });
         builder.show();
+    }
+    //Uri에서 파일명을 추출하는 함수
+    public String getImageNameToUri(Uri data){
+        String[] proj = {MediaStore.Images.Media.DATA};
+        Cursor cursor = managedQuery(data,proj,null,null,null);
+        int index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+        cursor.moveToFirst();
+
+        String imgPath = cursor.getString(index);
+        gImgPath = imgPath;
+        String imgName = imgPath.substring(imgPath.lastIndexOf("/")+1);
+
+        return imgName;
+    }
+    //사진을 저장할 폴더를 만드는 함수 ///storage/emulated/0:commentImageFolder
+    public File getSaveFolder(){
+        String folderName = "commentImageFolder";
+        File dir = new File(Environment.getExternalStorageDirectory().getAbsolutePath()+"/"+folderName);
+        if(!dir.exists()){
+            dir.mkdir();
+        }
+        return dir;
+    }
+    //사진을 저장 시키는 함수
+    public void copyImageFile(){
+        FileInputStream fis = null;
+        FileOutputStream fos = null;
+        try {
+            fis = new FileInputStream(gImgPath);
+            fos = new FileOutputStream("/storage/emulated/0/commentImageFolder/"+fileName);
+            int data = 0;
+
+            while((data = fis.read())!= -1){
+                fos.write(data);
+            }
+
+        } catch (FileNotFoundException e) {
+            Log.d("FileNotError",e.getMessage());
+        } catch (IOException e) {
+            Log.d("fis read",e.getMessage());
+        } finally {
+            try {
+                fis.close();
+                fos.close();
+            } catch (IOException e) {
+                Log.d("반납오류",e.getMessage());
+            }
+        }
     }
 }
