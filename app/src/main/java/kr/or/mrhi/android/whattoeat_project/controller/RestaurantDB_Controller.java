@@ -175,6 +175,30 @@ public class RestaurantDB_Controller extends SQLiteOpenHelper {
         return retrunValue;
     }
 
+    // 음식점 별점 업데이트
+    public boolean updateRestaurantRating(RestaurantData restaurantData, float newRating){
+
+        boolean returnValue = false;
+        SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
+
+        try{
+            String query = "update restaurantTBL set starRating = "+ newRating +" where brandName = ?";
+
+            sqLiteDatabase.execSQL(query, new String[]{restaurantData.getBrandName()});
+
+            returnValue = true;
+
+        }catch (SQLException e){
+            Log.e("updateRatingData", e.getMessage());
+            returnValue = false;
+
+        }finally {
+            sqLiteDatabase.close();
+        }
+
+        return returnValue;
+    }
+
     // 코멘트 DB 특정 음식점만 가져오는 select
     public ArrayList<CommentData> selectCommentDB(String brandName) {
 

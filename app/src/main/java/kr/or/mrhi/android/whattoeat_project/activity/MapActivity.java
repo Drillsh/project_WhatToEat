@@ -51,6 +51,10 @@ public class MapActivity extends AppCompatActivity implements View.OnClickListen
         // 뷰에 카카오맵 세팅
         map_view.addView(mapView);
 
+        // getIntent
+        Intent intent = getIntent();
+        int brandPosition = intent.getIntExtra("restLocation", 0);
+
         // 커스텀 벌룬
         //mapView.setCalloutBalloonAdapter(new CustomCalloutBalloonAdapter());
 
@@ -122,15 +126,29 @@ public class MapActivity extends AppCompatActivity implements View.OnClickListen
              markerList.add(marker);
          }
 
-         try {
-             MapPOIItem mapPOIItem = markerList.get(0);
-             // 해당 좌표로 화면 중심 이동
-             mapView.setMapCenterPoint(mapPOIItem.getMapPoint(), true);
-             // 특정 POI(Point Of Interest: 좌표) item 선택
-             mapView.selectPOIItem(mapPOIItem, true);
-         }catch (IndexOutOfBoundsException e){
-             Log.d("MapActivity", e.getMessage());
-         }
+        if(intent != null){
+            try {
+                MapPOIItem mapPOIItem = markerList.get(brandPosition);
+                // 해당 좌표로 화면 중심 이동
+                mapView.setMapCenterPoint(mapPOIItem.getMapPoint(), true);
+                // 특정 POI(Point Of Interest: 좌표) item 선택
+                mapView.selectPOIItem(mapPOIItem, true);
+                viewPager.setCurrentItem(brandPosition);
+            }catch (IndexOutOfBoundsException e){
+                Log.d("MapActivity", e.getMessage());
+            }
+        }else{
+            try {
+                MapPOIItem mapPOIItem = markerList.get(0);
+                // 해당 좌표로 화면 중심 이동
+                mapView.setMapCenterPoint(mapPOIItem.getMapPoint(), true);
+                // 특정 POI(Point Of Interest: 좌표) item 선택
+                mapView.selectPOIItem(mapPOIItem, true);
+            }catch (IndexOutOfBoundsException e){
+                Log.d("MapActivity", e.getMessage());
+            }
+        }
+
     }
 
     // 뷰 객체 찾기
