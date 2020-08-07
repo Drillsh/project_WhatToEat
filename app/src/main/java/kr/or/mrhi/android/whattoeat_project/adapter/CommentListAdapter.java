@@ -40,7 +40,6 @@ public class CommentListAdapter extends RecyclerView.Adapter<CommentListAdapter.
     public CommentListAdapter.CustomViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
         View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.restaurant_list, viewGroup, false);
         CommentListAdapter.CustomViewHolder viewHolder = new CustomViewHolder(view);
-
         return viewHolder;
     }
 
