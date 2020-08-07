@@ -46,7 +46,6 @@ public class CommentListAdapter extends RecyclerView.Adapter<CommentListAdapter.
 
     @Override
     public void onBindViewHolder(@NonNull CommentListAdapter.CustomViewHolder customViewHolder, int position) {
-        RestaurantDB_Controller restaurantDBController = RestaurantDB_Controller.getInstance(context);
 
         Bitmap bitmap = null;
         Uri uri1 = Uri.parse(commentList.get(position).getImgPath());

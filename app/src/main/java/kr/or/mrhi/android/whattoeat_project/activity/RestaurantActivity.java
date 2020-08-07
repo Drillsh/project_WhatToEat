@@ -60,6 +60,7 @@ public class RestaurantActivity extends AppCompatActivity implements View.OnClic
     Button btnCommentImage;
     EditText etComment;
     RatingBar rbRecommed;
+    int position;
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
@@ -72,10 +73,11 @@ public class RestaurantActivity extends AppCompatActivity implements View.OnClic
 
         //MainFrag 리스트에서 사용자가 선택한 리스트의 위치정보 받아오기
         Intent intent = getIntent();
-        int position = intent.getIntExtra("nearbyList",0);
+        position = intent.getIntExtra("nearbyList",0);
 
         //DB에 저장된 업체정보를 가져와서 ArrayList에 저장
         restList = commentDB.selectRestaurantData();
+
 
         //ArrayList에 저장된 업체 중 MainFrag 리스트에서 선택된 업체정보를 받아옴
         restaurantData = restList.get(position);
@@ -86,6 +88,7 @@ public class RestaurantActivity extends AppCompatActivity implements View.OnClic
 
         tvRestAdress.setSelected(true);     //텍스트수가 일정수를 넘어가면 흐르게하는 효과
         tvRestContact.setText(restaurantData.getPhoneNum());
+        rbTotal.setRating(restaurantData.getStarRating());
 
         // 상호명으로 음식점의 코멘트 정보 가져옴
         commentArrayList.clear();
@@ -103,8 +106,34 @@ public class RestaurantActivity extends AppCompatActivity implements View.OnClic
 
         commentListAdapter.setOnLongClickListener(this);
 
-
         rbTotal.setEnabled(false);
+    }
+
+    //업체 평균 별점을 구하는 함수
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    private void restaurantAvgRating() {
+        float totalRating = 0.0f;
+        for(CommentData commentData :commentArrayList){
+
+            totalRating += commentData.getRating();
+
+        }
+
+        float avgRating = totalRating / commentArrayList.size();
+
+        rbTotal.setRating(avgRating);
+
+        boolean returnValue = commentDB.updateRestaurantRating(restaurantData,avgRating);
+        if (returnValue) {
+            Function.settingToast(getApplicationContext(), "데이터 갱신 성공");
+
+        } else {
+            Function.settingToast(getApplicationContext(), "데이터 갱신 실패");
+        }
+
+        Function.settingToast(getApplicationContext(),String.valueOf(restaurantData.getStarRating()));
+
     }
 
     private void findViewByIdFnc() {
@@ -129,13 +158,16 @@ public class RestaurantActivity extends AppCompatActivity implements View.OnClic
         switch (view.getId()){
             //음식점으로 전화연결
             case R.id.btnRestCall :
-                Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:012-3456-7890"));
+                Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel: " + restaurantData.getPhoneNum()));
                 startActivity(intent);
                 break;
             //음식점 위치 정보
             case R.id.btnRestLocation :
-
+                Intent mapIntent = new Intent(getApplicationContext(),MapActivity.class);
+                mapIntent.putExtra("restLocation",position);
+                startActivity(mapIntent);
                 break;
+
             //리뷰 작성 다이얼로그 창
             case R.id.btnAddComment :
                 View commentView = View.inflate(view.getContext(),R.layout.add_comment,null);
@@ -164,6 +196,7 @@ public class RestaurantActivity extends AppCompatActivity implements View.OnClic
                     @RequiresApi(api = Build.VERSION_CODES.N)
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
+                        //작성한 리뷰,별점,이미지,작성날짜를 받아서 DB에 저장
                         String comment = etComment.getText().toString();
                         float rating = rbRecommed.getRating();
                         String commetImage = uri.toString();
@@ -182,9 +215,13 @@ public class RestaurantActivity extends AppCompatActivity implements View.OnClic
                             Function.settingToast(getApplicationContext(), "데이터 삽입 실패");
                         }
 
+                        //위에서 저장한 리뷰를 리스트로 뿌려줌
                         commentListAdapter.setCommentList(commentArrayList);
                         commentList.setAdapter(commentListAdapter);
                         commentListAdapter.notifyDataSetChanged();
+
+                        //해당업체 리뷰 평균 별점
+                        restaurantAvgRating();
                     }
                 });
 
@@ -213,6 +250,7 @@ public class RestaurantActivity extends AppCompatActivity implements View.OnClic
         }
     }
 
+    //리스트 롱클릭 이벤트 처리 함수
     @Override
     public void onItemLongClick(View view, int position) {
         final android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(RestaurantActivity.this);
