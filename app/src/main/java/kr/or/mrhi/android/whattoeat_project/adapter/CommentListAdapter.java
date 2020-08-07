@@ -40,7 +40,6 @@ public class CommentListAdapter extends RecyclerView.Adapter<CommentListAdapter.
     public CommentListAdapter.CustomViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
         View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.restaurant_list, viewGroup, false);
         CommentListAdapter.CustomViewHolder viewHolder = new CustomViewHolder(view);
-
         return viewHolder;
     }
 
@@ -48,9 +47,9 @@ public class CommentListAdapter extends RecyclerView.Adapter<CommentListAdapter.
     public void onBindViewHolder(@NonNull CommentListAdapter.CustomViewHolder customViewHolder, int position) {
         RestaurantDB_Controller restaurantDBController = RestaurantDB_Controller.getInstance(context);
 
-        ArrayList<CommentData> arrayList = restaurantDBController.selectCommentDB();
+        commentList = restaurantDBController.selectCommentDB();
         Bitmap bitmap = null;
-        Uri uri1 = Uri.parse(arrayList.get(position).getImgPath());
+        Uri uri1 = Uri.parse(commentList.get(position).getImgPath());
 
         try {
             InputStream in = context.getContentResolver().openInputStream(uri1);
@@ -59,9 +58,9 @@ public class CommentListAdapter extends RecyclerView.Adapter<CommentListAdapter.
             e.printStackTrace();
         }
 
-        customViewHolder.tvDate.setText(arrayList.get(position).getDate());
-        customViewHolder.tvEditComment.setText(arrayList.get(position).getComment());
-        customViewHolder.rbListRating.setRating(arrayList.get(position).getRating());
+        customViewHolder.tvDate.setText(commentList.get(position).getDate());
+        customViewHolder.tvEditComment.setText(commentList.get(position).getComment());
+        customViewHolder.rbListRating.setRating(commentList.get(position).getRating());
         customViewHolder.imageView2.setImageBitmap(bitmap);
     }
 

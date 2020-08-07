@@ -92,7 +92,8 @@ public class RestaurantActivity extends AppCompatActivity implements View.OnClic
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
 
         // 상호명으로 음식점의 코멘트 정보 가져옴
-        commentArrayList = commentDB.selectCommentDB(restaurantData.getBrandName());
+        commentArrayList.clear();
+        commentArrayList.addAll(commentDB.selectCommentDB(restaurantData.getBrandName()));
 
         commentListAdapter.setCommentList(commentArrayList);
         commentListAdapter.notifyDataSetChanged();
