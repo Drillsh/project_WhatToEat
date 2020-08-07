@@ -87,12 +87,13 @@ public class RestaurantActivity extends AppCompatActivity implements View.OnClic
         tvRestAdress.setSelected(true);     //텍스트수가 일정수를 넘어가면 흐르게하는 효과
         tvRestContact.setText(restaurantData.getPhoneNum());
 
+        // 상호명으로 음식점의 코멘트 정보 가져옴
+        commentArrayList.clear();
+        commentArrayList.addAll(commentDB.selectCommentDB(restaurantData.getBrandName()));
+
         //recyclerview
         commentListAdapter = new CommentListAdapter(getApplicationContext());
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
-
-        // 상호명으로 음식점의 코멘트 정보 가져옴
-        commentArrayList = commentDB.selectCommentDB(restaurantData.getBrandName());
 
         commentListAdapter.setCommentList(commentArrayList);
         commentListAdapter.notifyDataSetChanged();
