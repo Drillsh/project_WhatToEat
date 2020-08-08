@@ -117,7 +117,7 @@ public class RestaurantDB_Controller extends SQLiteOpenHelper {
     // 음식점DB 삽입
     public boolean insertRestaurantData(ArrayList<RestaurantData> restaurantList) {
 
-        boolean retrunValue = false;
+        boolean returnValue = false;
         SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
 
         try {
@@ -138,23 +138,23 @@ public class RestaurantDB_Controller extends SQLiteOpenHelper {
                 // 예외발생시 SQLException
                 sqLiteDatabase.execSQL(query);
             }
-            retrunValue = true;
+            returnValue = true;
 
         } catch (SQLException e) {
             Log.e("insertData", e.getMessage());
-            retrunValue = false;
+            returnValue = false;
 
         } finally {
             sqLiteDatabase.close();
         }
 
-        return retrunValue;
+        return returnValue;
     }
 
     // 음식점DB 삭제
     public boolean deleteRestaurantData(RestaurantData restaurantData){
 
-        boolean retrunValue = false;
+        boolean returnValue = false;
         SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
 
         try {
@@ -162,17 +162,17 @@ public class RestaurantDB_Controller extends SQLiteOpenHelper {
 
             sqLiteDatabase.execSQL(query, new String[]{restaurantData.getBrandName()});
 
-            retrunValue = true;
+            returnValue = true;
 
         }catch (SQLException e){
             Log.e("deleteData", e.getMessage());
-            retrunValue = false;
+            returnValue = false;
 
         }finally {
             sqLiteDatabase.close();
         }
 
-        return retrunValue;
+        return returnValue;
     }
 
     // 음식점 별점 업데이트
@@ -182,9 +182,8 @@ public class RestaurantDB_Controller extends SQLiteOpenHelper {
         SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
 
         try{
-            String query = "update restaurantTBL set starRating = "+ newRating +" where brandName = ?";
-
-            sqLiteDatabase.execSQL(query, new String[]{restaurantData.getBrandName()});
+            String query = "update restaurantTBL set starRating = ? where brandName = ?";
+            sqLiteDatabase.execSQL(query, new String[]{String.valueOf(newRating), restaurantData.getBrandName()});
 
             returnValue = true;
 
@@ -268,7 +267,7 @@ public class RestaurantDB_Controller extends SQLiteOpenHelper {
     // 코멘트 DB 삽입
     public boolean insertCommentData(CommentData data) {
 
-        boolean retrunValue = false;
+        boolean returnValue = false;
         SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
 
         try {
@@ -283,23 +282,23 @@ public class RestaurantDB_Controller extends SQLiteOpenHelper {
                 // 예외발생시 SQLException
                 sqLiteDatabase.execSQL(query);
 
-            retrunValue = true;
+            returnValue = true;
 
         } catch (SQLException e) {
             Log.e("insertCommentData", e.getMessage());
-            retrunValue = false;
+            returnValue = false;
 
         } finally {
             sqLiteDatabase.close();
         }
 
-        return retrunValue;
+        return returnValue;
     }
 
     // 코멘트 DB 삭제
     public boolean deleteCommentData(CommentData commentData){
 
-        boolean retrunValue = false;
+        boolean returnValue = false;
         SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
 
         try {
@@ -307,16 +306,16 @@ public class RestaurantDB_Controller extends SQLiteOpenHelper {
 
             sqLiteDatabase.execSQL(query, new String[]{commentData.getBrandName(), commentData.getComment(), commentData.getDate(), String.valueOf(commentData.getRating())});
 
-            retrunValue = true;
+            returnValue = true;
 
         }catch (SQLException e){
             Log.e("deleteCommentData", e.getMessage());
-            retrunValue = false;
+            returnValue = false;
 
         }finally {
             sqLiteDatabase.close();
         }
 
-        return retrunValue;
+        return returnValue;
     }
 }

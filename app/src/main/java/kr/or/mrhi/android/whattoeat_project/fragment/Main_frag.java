@@ -2,6 +2,9 @@ package kr.or.mrhi.android.whattoeat_project.fragment;
 
 import android.content.Context;
 import android.content.Intent;
+import android.location.Address;
+import android.location.Geocoder;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -20,7 +23,11 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import net.daum.mf.map.api.MapPoint;
+
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 import kr.or.mrhi.android.whattoeat_project.R;
@@ -143,7 +150,7 @@ public class Main_frag extends Fragment implements BrandListAdapter.OnItemClickL
         ibSearch.setOnClickListener(this);
     }
 
-    //더보기 클릭시 이벤트 처리
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
@@ -160,14 +167,47 @@ public class Main_frag extends Fragment implements BrandListAdapter.OnItemClickL
                 startActivity(intentMap);
                 break;
 
+            // 검색 버튼 클릭
             case R.id.ibSearch:
-                //웹 검색 액티비티로 이동
-                Intent intentSearch = new Intent(getActivity(), WebSearchActivity.class);
-                //edtSearch 입력값 넘겨줌
-                intentSearch.putExtra("name", edtSearch.getText().toString());
-                startActivity(intentSearch);
-                break;
 
+                List<Address> list = null;
+
+                Geocoder geocoder = new Geocoder(mainActivity);
+                String str = edtSearch.getText().toString();
+
+                try {
+                    list = geocoder.getFromLocationName(
+                            str, // 지역 이름
+                            10); // 읽을 개수
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    Log.e("test", "입출력 오류 - 서버에서 주소변환시 에러발생");
+                }
+
+                if (list != null) {
+                    if (list.size() == 0) {
+                        Function.settingToast(mainActivity, "해당되는 주소 정보가 없습니다");
+
+                    } else {
+
+                        Address addr = list.get(0);
+                        double latitude = addr.getLatitude();
+                        double longitude = addr.getLongitude();
+
+                        double[] position = new double[]{latitude, longitude};
+
+                        // 번들에 주소정보 담아 보냄
+                        Bundle searchResult = new Bundle();
+                        searchResult.putDoubleArray("searchResult", position);
+                        mainActivity.getAdd_frag().setArguments(searchResult);
+
+                        // 맛집 추가 프래그먼트로 이동
+                        mainActivity.setChangeFragment(MainActivity.FRAG_ADD);
+                    }
+                }
+
+                break;
         }
     }
 

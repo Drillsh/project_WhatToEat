@@ -256,6 +256,7 @@ public class RestaurantActivity extends AppCompatActivity implements View.OnClic
             setImage(uri);
         }
     }
+
     //이미지뷰에 uri를 통해 비트맵생성후 세팅
     private void setImage(Uri uri){
         try {

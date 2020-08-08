@@ -1,9 +1,13 @@
 package kr.or.mrhi.android.whattoeat_project.activity;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager.widget.ViewPager;
 
 import android.content.Intent;
+import android.location.Address;
+import android.location.Geocoder;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -17,13 +21,16 @@ import net.daum.mf.map.api.MapPOIItem;
 import net.daum.mf.map.api.MapPoint;
 import net.daum.mf.map.api.MapView;
 
+import java.io.IOException;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.List;
 
 import kr.or.mrhi.android.whattoeat_project.R;
 import kr.or.mrhi.android.whattoeat_project.adapter.ViewPagerAdapter;
 import kr.or.mrhi.android.whattoeat_project.controller.RestaurantDB_Controller;
 import kr.or.mrhi.android.whattoeat_project.fragment.Main_frag;
+import kr.or.mrhi.android.whattoeat_project.function.Function;
 import kr.or.mrhi.android.whattoeat_project.model.RestaurantData;
 
 // 전체 등록 리스트 지도에서 보기
@@ -37,6 +44,7 @@ public class MapActivity extends AppCompatActivity implements View.OnClickListen
 
     private ArrayList<MapPOIItem> markerList = new ArrayList<>();
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,15 +53,15 @@ public class MapActivity extends AppCompatActivity implements View.OnClickListen
         // 뷰 객체 찾기
         findViewByIdFunc();
 
+        // getIntent
+        Intent intent = getIntent();
+        int brandPosition = intent.getIntExtra("restLocation", 0);
+
         // 카카오맵 인스턴스
         MapView mapView = new MapView(MapActivity.this);
         mapView.setZoomLevel(-1, true);
         // 뷰에 카카오맵 세팅
         map_view.addView(mapView);
-
-        // getIntent
-        Intent intent = getIntent();
-        int brandPosition = intent.getIntExtra("restLocation", 0);
 
         // 커스텀 벌룬
         //mapView.setCalloutBalloonAdapter(new CustomCalloutBalloonAdapter());
@@ -66,8 +74,6 @@ public class MapActivity extends AppCompatActivity implements View.OnClickListen
         ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getApplicationContext());
         viewPagerAdapter.setArrayList(restaurantDataList);
         viewPager.setAdapter(viewPagerAdapter);
-
-
 
         // 뷰페이저 체인지 리스너
         viewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -97,36 +103,38 @@ public class MapActivity extends AppCompatActivity implements View.OnClickListen
         mapView.setPOIItemEventListener(this);
 
         // 등록된 음식점들을 마커로 찍음
-         for (int i = 0; i < restaurantDataList.size(); ++i){
+        for (int i = 0; i < restaurantDataList.size(); ++i) {
 
-             RestaurantData restaurantData = restaurantDataList.get(i);
+            RestaurantData restaurantData = restaurantDataList.get(i);
 
-             // 마커 인스턴스
-             MapPOIItem marker = new MapPOIItem();
+            // 마커 인스턴스
+            MapPOIItem marker = new MapPOIItem();
 
-             // 위,경도 가져옴
-             double latitude = restaurantData.getLatitude();
-             double longitude = restaurantData.getLongitude();
+            // 위,경도 가져옴
+            double latitude = restaurantData.getLatitude();
+            double longitude = restaurantData.getLongitude();
 
-             // 위경도로 MapPoint 인스턴스
-             MapPoint mapPoint = MapPoint.mapPointWithGeoCoord(latitude, longitude);
+            // 위경도로 MapPoint 인스턴스
+            MapPoint mapPoint = MapPoint.mapPointWithGeoCoord(latitude, longitude);
 
-             // 마커 세팅
-             marker.setItemName(restaurantData.getBrandName());
-             marker.setTag(i);
-             marker.setMapPoint(mapPoint);
-             marker.setMarkerType(MapPOIItem.MarkerType.CustomImage);   // 마커 타입을 커스텀 마커로 지정
-             marker.setCustomImageResourceId(R.drawable.marker);        //마커 이미지
-             marker.setCustomImageAutoscale(true);                     // 지도 라이브러리의 스케일 기능을 꺼줌
+            // 마커 세팅
+            marker.setItemName(restaurantData.getBrandName());
+            marker.setTag(i);
+            marker.setMapPoint(mapPoint);
+            marker.setMarkerType(MapPOIItem.MarkerType.CustomImage);   // 마커 타입을 커스텀 마커로 지정
+            marker.setCustomImageResourceId(R.drawable.marker);        //마커 이미지
+            marker.setCustomImageAutoscale(true);                     // 지도 라이브러리의 스케일 기능을 꺼줌
 
-             // 맵뷰에 마커 세팅
-             mapView.addPOIItem(marker);
-             mapView.selectPOIItem(marker, true);
+            // 맵뷰에 마커 세팅
+            mapView.addPOIItem(marker);
+            mapView.selectPOIItem(marker, true);
 
-             markerList.add(marker);
-         }
+            markerList.add(marker);
+        }
 
-        if(intent != null){
+
+        if (intent != null) {
+
             try {
                 MapPOIItem mapPOIItem = markerList.get(brandPosition);
                 // 해당 좌표로 화면 중심 이동
@@ -134,21 +142,22 @@ public class MapActivity extends AppCompatActivity implements View.OnClickListen
                 // 특정 POI(Point Of Interest: 좌표) item 선택
                 mapView.selectPOIItem(mapPOIItem, true);
                 viewPager.setCurrentItem(brandPosition);
-            }catch (IndexOutOfBoundsException e){
+            } catch (IndexOutOfBoundsException e) {
                 Log.d("MapActivity", e.getMessage());
             }
-        }else{
+
+        } else {
             try {
                 MapPOIItem mapPOIItem = markerList.get(0);
                 // 해당 좌표로 화면 중심 이동
                 mapView.setMapCenterPoint(mapPOIItem.getMapPoint(), true);
                 // 특정 POI(Point Of Interest: 좌표) item 선택
                 mapView.selectPOIItem(mapPOIItem, true);
-            }catch (IndexOutOfBoundsException e){
+
+            } catch (IndexOutOfBoundsException e) {
                 Log.d("MapActivity", e.getMessage());
             }
         }
-
     }
 
     // 뷰 객체 찾기
@@ -165,7 +174,7 @@ public class MapActivity extends AppCompatActivity implements View.OnClickListen
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.btnGoList:
                 Intent intent = new Intent(getApplicationContext(), ListActivity.class);
                 startActivity(intent);
@@ -199,18 +208,19 @@ public class MapActivity extends AppCompatActivity implements View.OnClickListen
 
     }
 
+    // 커스텀 벌룬 클래스
     class CustomCalloutBalloonAdapter implements CalloutBalloonAdapter {
 
         private View mCalloutBalloon;
 
-        public CustomCalloutBalloonAdapter(){
+        public CustomCalloutBalloonAdapter() {
             mCalloutBalloon = getLayoutInflater().inflate(R.layout.custom_callout_balloon, null);
         }
 
         @Override
         public View getCalloutBalloon(MapPOIItem mapPOIItem) {
             ((ImageView) mCalloutBalloon.findViewById(R.id.ivImage)).setImageResource(R.drawable.pika);
-            ((TextView)mCalloutBalloon.findViewById(R.id.tvBrandName)).setText(mapPOIItem.getItemName());
+            ((TextView) mCalloutBalloon.findViewById(R.id.tvBrandName)).setText(mapPOIItem.getItemName());
             ((TextView) mCalloutBalloon.findViewById(R.id.tvDesc)).setText("가즈아아아");
             return mCalloutBalloon;
         }

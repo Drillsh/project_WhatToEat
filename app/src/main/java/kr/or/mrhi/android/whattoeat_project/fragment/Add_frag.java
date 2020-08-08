@@ -16,7 +16,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -62,12 +61,6 @@ public class Add_frag extends Fragment {
         mainActivity = null;
     }
 
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-    }
-
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -92,11 +85,21 @@ public class Add_frag extends Fragment {
 
         // 현재 좌표로 맵이동
         MapPoint mapPoint = MapPoint.mapPointWithGeoCoord(latitude, longitude);
-        mapView.setMapCenterPoint(mapPoint,true);
-        mapView.setZoomLevel(-1,true);
+        mapView.setMapCenterPoint(mapPoint, true);
+        mapView.setZoomLevel(-1, true);
+
+        // 주소 데이터 받아옴
+        Bundle bundle = this.getArguments();
+        if (bundle != null) {
+            double[] pos = bundle.getDoubleArray("searchResult");
+            mapPoint = MapPoint.mapPointWithGeoCoord(pos[0], pos[1]);
+
+            mapView.setMapCenterPoint(mapPoint, true);
+        }
 
         // 뷰에 카카오맵 세팅
         map_view.addView(mapView);
+
 
         // 일단 메뉴버튼 누르면 등록되도록
         fbMenu.setOnClickListener(new View.OnClickListener() {
@@ -190,7 +193,7 @@ public class Add_frag extends Fragment {
     @RequiresApi(api = Build.VERSION_CODES.N)
     public String getCurrentAddress(double latitude, double longitude) {
 
-        //지오코더... GPS를 주소로 변환
+        //지오코더: GPS를 주소로 변환
         Geocoder geocoder = new Geocoder(mainActivity, Locale.getDefault());
 
         List<Address> addresses;

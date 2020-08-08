@@ -313,4 +313,8 @@ public class MainActivity extends AppCompatActivity {
             Log.e("name not found", e.toString());
         }
     }
+
+    public Add_frag getAdd_frag() {
+        return add_frag;
+    }
 }
