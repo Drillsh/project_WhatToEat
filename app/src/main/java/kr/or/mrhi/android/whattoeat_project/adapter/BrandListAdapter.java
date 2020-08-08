@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
@@ -75,7 +76,7 @@ public class BrandListAdapter extends RecyclerView.Adapter<BrandListAdapter.Cust
     }
 
     public class CustomViewHolder extends RecyclerView.ViewHolder {
-
+        ImageView imageView;
         TextView tvBrandName;
         TextView tvCategory;
         TextView tvDistance;

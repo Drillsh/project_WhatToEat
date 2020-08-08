@@ -24,12 +24,13 @@ import kr.or.mrhi.android.whattoeat_project.model.UserData;
 //카카오톡 로그인 클래스
 public class LoginActivity extends AppCompatActivity {
     private SessionCallback sessionCallback;
+    private MainActivity mainActivity = new MainActivity();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-
+        mainActivity.getAppKeyHash();
         sessionCallback = new SessionCallback(); //SessionCallback 초기화
         Session.getCurrentSession().addCallback(sessionCallback); //현재 세션에 콜백을 붙임
         //자동 로그인 함수 제일 먼저 화면에 나타나게 되는 액티비티 안에 있어야 제대로 실행이 된다.

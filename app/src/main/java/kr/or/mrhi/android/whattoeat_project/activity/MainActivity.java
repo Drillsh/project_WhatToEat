@@ -307,7 +307,7 @@ public class MainActivity extends AppCompatActivity {
                 md.update(signature.toByteArray());
                 String something = new String(Base64.encode(md.digest(), 0));
                 Log.e("Hash key", something);
-            }
+        }
         } catch (Exception e) {
             // TODO Auto-generated catch block
             Log.e("name not found", e.toString());
