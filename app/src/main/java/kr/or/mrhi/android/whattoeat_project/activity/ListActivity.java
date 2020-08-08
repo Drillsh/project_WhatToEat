@@ -1,6 +1,8 @@
 package kr.or.mrhi.android.whattoeat_project.activity;
 
 import android.app.AlertDialog;
+
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -82,7 +84,7 @@ public class ListActivity extends AppCompatActivity implements View.OnClickListe
     public void onItemClick(View v, int pos) {
       Intent intent = new Intent(getApplicationContext(),RestaurantActivity.class);
       intent.putExtra("number",pos);
-      startActivity(intent);
+      startActivityForResult(intent,1011);
       finish();
     }
     //리사이클뷰 롱클릭 이벤트 등록 처리
@@ -109,4 +111,5 @@ public class ListActivity extends AppCompatActivity implements View.OnClickListe
         });
         builder.show();
     }
+
 }

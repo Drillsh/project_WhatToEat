@@ -82,7 +82,14 @@ public class RestaurantActivity extends AppCompatActivity implements View.OnClic
 
         //MainFrag 리스트에서 사용자가 선택한 리스트의 위치정보 받아오기
         Intent intent = getIntent();
-        position = intent.getIntExtra("nearbyList",0);
+
+        if (intent.hasExtra("nearbyList")){
+            position = intent.getIntExtra("nearbyList",0);
+        }else if(intent.hasExtra("todayList")){
+            position = intent.getIntExtra("todayList",0);
+        }else if(intent.hasExtra("number")) {
+            position = intent.getIntExtra("number",0);
+        }
 
         //DB에 저장된 업체정보를 가져와서 ArrayList에 저장
         restList = commentDB.selectRestaurantData();
@@ -255,6 +262,16 @@ public class RestaurantActivity extends AppCompatActivity implements View.OnClic
             Log.d("사진 파일명","파일명: "+fileName+"이미지 path: "+gImgPath+"uri 값: "+uri.toString());
             setImage(uri);
         }
+        /*switch (requestCode){
+            case 1001 :
+                Intent intent= getIntent();
+                position = intent.getIntExtra("todayList",0);
+                break;
+            case 1011 :
+                position = data.getIntExtra("number",0);
+                break;
+        }*/
+
     }
 
     //이미지뷰에 uri를 통해 비트맵생성후 세팅
@@ -341,4 +358,5 @@ public class RestaurantActivity extends AppCompatActivity implements View.OnClic
             }
         }
     }
+
 }

@@ -1,10 +1,13 @@
 package kr.or.mrhi.android.whattoeat_project.adapter;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -13,12 +16,18 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 
 import kr.or.mrhi.android.whattoeat_project.R;
+import kr.or.mrhi.android.whattoeat_project.activity.ListActivity;
+import kr.or.mrhi.android.whattoeat_project.controller.RestaurantDB_Controller;
+import kr.or.mrhi.android.whattoeat_project.model.CommentData;
 import kr.or.mrhi.android.whattoeat_project.model.RestaurantData;
 
 public class TotalListAdapter extends RecyclerView.Adapter<TotalListAdapter.CustomViewHolder> {
 
     private Context context;
     private ArrayList<RestaurantData> brandList;
+    private ArrayList<CommentData> commentDataList;
+    private RestaurantDB_Controller restaurantDB_controller;
+    private ListActivity listActivity = new ListActivity();
 
     // 리스너 객체 참조를 저장하는 변수
     private OnItemClickListener mListener = null;
@@ -39,6 +48,20 @@ public class TotalListAdapter extends RecyclerView.Adapter<TotalListAdapter.Cust
 
     @Override
     public void onBindViewHolder(@NonNull TotalListAdapter.CustomViewHolder customViewHolder, int position) {
+        restaurantDB_controller = RestaurantDB_Controller.getInstance(listActivity);
+        Bitmap bitmap = null;
+        commentDataList = restaurantDB_controller.selectCommentDB(brandList.get(position).getBrandName());
+
+        //지정폴더에서  path값으로 비트맵을 만든다.
+        BitmapFactory.Options bfo = new BitmapFactory.Options();
+        bfo.inSampleSize = 2;
+        if(commentDataList.size() != 0){
+            bitmap = BitmapFactory.decodeFile(commentDataList.get(0).getImgPath(),bfo);
+            customViewHolder.ivFoodPicture.setImageBitmap(bitmap);
+        }else{
+            customViewHolder.ivFoodPicture.setImageDrawable(context.getResources().getDrawable(R.drawable.pika));
+        }
+
         customViewHolder.tvEateryName.setText(brandList.get(position).getBrandName());
         customViewHolder.tvEateryName.setSelected(true);
         customViewHolder.tvFoodMenu.setText(brandList.get(position).getCategory());
@@ -73,7 +96,7 @@ public class TotalListAdapter extends RecyclerView.Adapter<TotalListAdapter.Cust
     }
 
     public class CustomViewHolder extends RecyclerView.ViewHolder {
-
+        ImageView ivFoodPicture;
         TextView tvEateryName;
         TextView tvFoodMenu;
         TextView tvDistance;
@@ -83,7 +106,7 @@ public class TotalListAdapter extends RecyclerView.Adapter<TotalListAdapter.Cust
         int pos = 0;
         public CustomViewHolder(@NonNull View itemView) {
             super(itemView);
-
+            ivFoodPicture = (ImageView) itemView.findViewById(R.id.ivFoodPicture);
             tvEateryName = (TextView) itemView.findViewById(R.id.tvEateryName);
             tvFoodMenu = (TextView) itemView.findViewById(R.id.tvFoodMenu);
             tvDistance = (TextView) itemView.findViewById(R.id.tvDesc);
@@ -132,5 +155,13 @@ public class TotalListAdapter extends RecyclerView.Adapter<TotalListAdapter.Cust
 
     public void setmListener(OnItemClickListener mListener) {
         this.mListener = mListener;
+    }
+
+    public ArrayList<CommentData> getCommentDataList() {
+        return commentDataList;
+    }
+
+    public void setCommentDataList(ArrayList<CommentData> commentDataList) {
+        this.commentDataList = commentDataList;
     }
 }
