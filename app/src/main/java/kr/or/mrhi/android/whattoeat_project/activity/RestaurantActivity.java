@@ -39,8 +39,8 @@ import java.util.Date;
 import java.util.Locale;
 
 import kr.or.mrhi.android.whattoeat_project.R;
+import kr.or.mrhi.android.whattoeat_project.adapter.CommentImageAdapter;
 import kr.or.mrhi.android.whattoeat_project.adapter.CommentListAdapter;
-import kr.or.mrhi.android.whattoeat_project.adapter.RestaurantGalleryAdapter;
 import kr.or.mrhi.android.whattoeat_project.controller.RestaurantDB_Controller;
 import kr.or.mrhi.android.whattoeat_project.function.Function;
 import kr.or.mrhi.android.whattoeat_project.model.CommentData;
@@ -53,7 +53,7 @@ public class RestaurantActivity extends AppCompatActivity implements View.OnClic
     private Gallery gallery;
     private RecyclerView commentList;
     private CommentListAdapter commentListAdapter;
-    private RestaurantGalleryAdapter restaurantGalleryAdapter;
+    private CommentImageAdapter commentImageAdapter;
 
     private ArrayList<RestaurantData> restList = new ArrayList<>();
     private ArrayList<CommentData> commentArrayList = new ArrayList<>();
@@ -115,6 +115,10 @@ public class RestaurantActivity extends AppCompatActivity implements View.OnClic
 
         commentListAdapter.setOnLongClickListener(this);
 
+        //GalleryView
+        commentImageAdapter = new CommentImageAdapter(getApplicationContext());
+        gallery.setAdapter(commentImageAdapter);
+
         rbTotal.setEnabled(false);
     }
 
@@ -123,13 +127,18 @@ public class RestaurantActivity extends AppCompatActivity implements View.OnClic
     @RequiresApi(api = Build.VERSION_CODES.N)
     private void restaurantAvgRating() {
         float totalRating = 0.0f;
-        for(CommentData commentData :commentArrayList){
+        float avgRating = 0.0f;
 
-            totalRating += commentData.getRating();
+        if(!commentArrayList.isEmpty()) {
+            //리스트에서 하나씩 가져와서 계속 더해준다
+            for (CommentData commentData : commentArrayList) {
 
+                totalRating += commentData.getRating();
+
+            }
+            //위에서 더해준 총 별점을 등록된 리스트 사이즈로 나눠서 평균값을 구한다
+            avgRating = totalRating / commentArrayList.size();
         }
-
-        float avgRating = totalRating / commentArrayList.size();
 
         rbTotal.setRating(avgRating);
 
@@ -140,8 +149,6 @@ public class RestaurantActivity extends AppCompatActivity implements View.OnClic
         } else {
             Function.settingToast(getApplicationContext(), "데이터 갱신 실패");
         }
-
-        Function.settingToast(getApplicationContext(),String.valueOf(restaurantData.getStarRating()));
 
     }
 
@@ -173,6 +180,7 @@ public class RestaurantActivity extends AppCompatActivity implements View.OnClic
             //음식점 위치 정보
             case R.id.btnRestLocation :
                 Intent mapIntent = new Intent(getApplicationContext(),MapActivity.class);
+                //선택된 업체의 위치정보를 건내줌
                 mapIntent.putExtra("restLocation",position);
                 startActivity(mapIntent);
                 break;
@@ -274,12 +282,15 @@ public class RestaurantActivity extends AppCompatActivity implements View.OnClic
         builder.setTitle("목록에서 삭제하시겠습니까?");
         //"예"누를시 적용되는 이벤트 처리
         builder.setPositiveButton("예", new DialogInterface.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
 
                 CommentData commentData = commentArrayList.get(position);
                 commentDB.deleteCommentData(commentData);
                 commentArrayList.remove(position);
+                restaurantAvgRating();
+                deleteImageFile(commentData);
                 commentListAdapter.notifyDataSetChanged();
             }
         });
@@ -292,6 +303,7 @@ public class RestaurantActivity extends AppCompatActivity implements View.OnClic
         });
         builder.show();
     }
+
     //Uri에서 파일명을 추출하는 함수
     public String getImageNameToUri(Uri data){
         String[] proj = {MediaStore.Images.Media.DATA};
@@ -305,6 +317,7 @@ public class RestaurantActivity extends AppCompatActivity implements View.OnClic
 
         return imgName;
     }
+
     //사진을 저장할 폴더를 만드는 함수 ///storage/emulated/0:commentImageFolder
     public File getSaveFolder(){
         String folderName = "commentImageFolder";
@@ -314,6 +327,7 @@ public class RestaurantActivity extends AppCompatActivity implements View.OnClic
         }
         return dir;
     }
+
     //사진을 저장 시키는 함수
     public void copyImageFile(){
         FileInputStream fis = null;
@@ -338,6 +352,21 @@ public class RestaurantActivity extends AppCompatActivity implements View.OnClic
             } catch (IOException e) {
                 Log.d("반납오류",e.getMessage());
             }
+        }
+    }
+    //저장된 사진을 지우는 함수
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    public void deleteImageFile(CommentData commentData){
+        String fPath = null;
+        //commentData 안에 이미지 파일 경로설정
+        fPath = commentData.getImgPath();
+        File f = new File(fPath);
+
+        if(f.delete()){
+            Function.settingToast(getApplicationContext(),"삭제 성공");
+        }
+        else{
+            Function.settingToast(getApplicationContext(),"삭제 실패");
         }
     }
 }
