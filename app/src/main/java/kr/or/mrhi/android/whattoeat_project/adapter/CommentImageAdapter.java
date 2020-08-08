@@ -1,6 +1,7 @@
 package kr.or.mrhi.android.whattoeat_project.adapter;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,6 +43,11 @@ public class CommentImageAdapter extends BaseAdapter {
             convertView = layoutInflater.inflate(R.layout.comment_image,null);
         }
         ImageView ivCommentImage = convertView.findViewById(R.id.ivCommentImage);
+
+        CommentData commentData = comImageList.get(i);
+        String cImage = commentData.getImgPath();
+
+        //ivCommentImage.setImageBitmap();
 
         return convertView;
     }
