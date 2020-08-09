@@ -50,7 +50,7 @@
             android:layout_marginRight="5dp"
             android:layout_marginBottom="5dp"
             android:layout_weight="1.2"
-            app:cardBackgroundColor="#AE8BC34A"
+            app:cardBackgroundColor="#F2D022"
             app:cardCornerRadius="18dp"
             app:cardElevation="0dp">
 
@@ -59,7 +59,6 @@
                 android:layout_height="match_parent"
                 android:gravity="center"
                 android:orientation="horizontal"
-                android:cardBackgroundColor="#FDDF23"
                 android:padding="8dp">
 
                 <EditText
@@ -91,7 +90,7 @@
             android:layout_marginRight="5dp"
             android:layout_marginBottom="5dp"
             android:layout_weight="2.5"
-            app:cardBackgroundColor="#954CAF50"
+            app:cardBackgroundColor="#F2B807"
             app:cardCornerRadius="18dp"
             app:cardElevation="0dp">
 
@@ -128,7 +127,7 @@
             android:layout_marginRight="5dp"
             android:layout_marginBottom="5dp"
             android:layout_weight="5.3"
-            app:cardBackgroundColor="#9C009688"
+            app:cardBackgroundColor="#D94625"
             app:cardCornerRadius="18dp"
             app:cardElevation="0dp">
 
@@ -176,14 +175,18 @@
                         android:id="@+id/btnMoreList"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginRight="5dp"
                         android:layout_weight="1"
+                        android:background="#F2B807"
                         android:text="더보기" />
 
                     <Button
                         android:id="@+id/btnGoMap"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dp"
                         android:layout_weight="1"
+                        android:background="#F2B807"
                         android:text="지 도" />
                 </LinearLayout>
             </LinearLayout>
