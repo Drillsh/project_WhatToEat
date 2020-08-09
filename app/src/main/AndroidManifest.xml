@@ -39,7 +39,8 @@
             android:name="com.kakao.sdk.AppKey"
             android:value="187f279d8f571f1cb52daac8caa4eabc" />
 
-        <activity android:name=".activity.MainActivity"></activity>
+        <activity android:name=".activity.MainActivity"
+            android:windowSoftInputMode="adjustNothing"></activity>
     </application>
 
 </manifest>

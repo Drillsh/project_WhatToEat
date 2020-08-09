@@ -8,6 +8,8 @@ import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
 
+import net.daum.mf.map.api.MapPoint;
+
 import kr.or.mrhi.android.whattoeat_project.kakaologin.LoginActivity;
 
 public interface Function {
@@ -16,5 +18,4 @@ public interface Function {
     static void settingToast(Context context, String message){
         Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
     }
-
 }

@@ -1,42 +1,27 @@
 package kr.or.mrhi.android.whattoeat_project.activity;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.view.ViewCompat;
-import androidx.viewpager.widget.ViewPager;
 import androidx.viewpager2.widget.ViewPager2;
 
 import android.content.Intent;
-import android.location.Address;
-import android.location.Geocoder;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.DragEvent;
 import android.view.View;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.TabWidget;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import net.daum.mf.map.api.CalloutBalloonAdapter;
 import net.daum.mf.map.api.MapPOIItem;
 import net.daum.mf.map.api.MapPoint;
 import net.daum.mf.map.api.MapView;
 
-import java.io.IOException;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.List;
 
 import kr.or.mrhi.android.whattoeat_project.R;
 import kr.or.mrhi.android.whattoeat_project.adapter.ViewPagerAdapter;
 import kr.or.mrhi.android.whattoeat_project.controller.RestaurantDB_Controller;
-import kr.or.mrhi.android.whattoeat_project.fragment.Main_frag;
-import kr.or.mrhi.android.whattoeat_project.function.Function;
 import kr.or.mrhi.android.whattoeat_project.model.RestaurantData;
 
 // 전체 등록 리스트 지도에서 보기
@@ -61,6 +46,7 @@ public class MapActivity extends AppCompatActivity implements View.OnClickListen
 
         // getIntent
         Intent intent = getIntent();
+        int brandPosition = intent.getIntExtra("restLocation", 0);
 
         // 카카오맵 인스턴스
         MapView mapView = new MapView(MapActivity.this);
@@ -79,6 +65,8 @@ public class MapActivity extends AppCompatActivity implements View.OnClickListen
         ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getApplicationContext());
         viewPagerAdapter.setArrayList(restaurantDataList);
         viewPager.setAdapter(viewPagerAdapter);
+        viewPager.setOffscreenPageLimit(3);
+        viewPager.setCurrentItem(999 + brandPosition);
 
         // 뷰페이저 체인지 리스너
         viewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
@@ -87,17 +75,20 @@ public class MapActivity extends AppCompatActivity implements View.OnClickListen
             public void onPageSelected(int position) {
                 super.onPageSelected(position);
 
-                MapPOIItem mapPOIItem = markerList.get(position);
+                int index = position % markerList.size();
+
+                MapPOIItem mapPOIItem = markerList.get(index);
 
                 // 해당 좌표로 화면 중심 이동
                 mapView.setMapCenterPoint(mapPOIItem.getMapPoint(), true);
                 // 특정 POI(Point Of Interest: 좌표) item 선택
                 mapView.selectPOIItem(mapPOIItem, true);
+
             }
         });
 
         // 좌표 변환 리스너
-//        mapView.setPOIItemEventListener(this);
+        mapView.setPOIItemEventListener(this);
 
         // 등록된 음식점들을 마커로 찍음
         for (int i = 0; i < restaurantDataList.size(); ++i) {
@@ -131,14 +122,11 @@ public class MapActivity extends AppCompatActivity implements View.OnClickListen
 
         if (intent.hasExtra("restLocation")) {
             try {
-                int brandPosition = intent.getIntExtra("restLocation", 0);
-
                 MapPOIItem mapPOIItem = markerList.get(brandPosition);
                 // 해당 좌표로 화면 중심 이동
                 mapView.setMapCenterPoint(mapPOIItem.getMapPoint(), true);
                 // 특정 POI(Point Of Interest: 좌표) item 선택
                 mapView.selectPOIItem(mapPOIItem, true);
-                viewPager.setCurrentItem(brandPosition);
 
             } catch (IndexOutOfBoundsException e) {
                 Log.d("MapActivity", e.getMessage());
@@ -146,7 +134,7 @@ public class MapActivity extends AppCompatActivity implements View.OnClickListen
 
         } else {
             try {
-                MapPOIItem mapPOIItem = markerList.get(2);
+                MapPOIItem mapPOIItem = markerList.get(0);
                 // 해당 좌표로 화면 중심 이동
                 mapView.setMapCenterPoint(mapPOIItem.getMapPoint(), true);
                 // 특정 POI(Point Of Interest: 좌표) item 선택

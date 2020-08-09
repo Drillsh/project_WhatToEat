@@ -3,6 +3,7 @@ package kr.or.mrhi.android.whattoeat_project.adapter;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.location.Location;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +19,8 @@ import java.util.ArrayList;
 import kr.or.mrhi.android.whattoeat_project.R;
 import kr.or.mrhi.android.whattoeat_project.activity.MainActivity;
 import kr.or.mrhi.android.whattoeat_project.controller.RestaurantDB_Controller;
+import kr.or.mrhi.android.whattoeat_project.function.Function;
+import kr.or.mrhi.android.whattoeat_project.function.GpsTracker;
 import kr.or.mrhi.android.whattoeat_project.model.CommentData;
 import kr.or.mrhi.android.whattoeat_project.model.RestaurantData;
 
@@ -53,9 +56,11 @@ public class BrandListAdapter extends RecyclerView.Adapter<BrandListAdapter.Cust
     @Override
     public void onBindViewHolder(@NonNull BrandListAdapter.CustomViewHolder customViewHolder, int position) {
 
+        RestaurantData restaurantData = brandList.get(position);
+
         restaurantDB_controller = RestaurantDB_Controller.getInstance(mainActivity);
         Bitmap bitmap = null;
-        commentDataList = restaurantDB_controller.selectCommentDB(brandList.get(position).getBrandName());
+        commentDataList = restaurantDB_controller.selectCommentDB(restaurantData.getBrandName());
 
         //지정폴더에서  path값으로 비트맵을 만든다.
         BitmapFactory.Options bfo = new BitmapFactory.Options();
@@ -67,17 +72,38 @@ public class BrandListAdapter extends RecyclerView.Adapter<BrandListAdapter.Cust
             customViewHolder.ivImage.setImageDrawable(context.getResources().getDrawable(R.drawable.chefpikachu));
         }
 
+        // 현재 좌표
+        Location currentPos = new Location("현재 좌표");
+        GpsTracker gpsTracker = new GpsTracker(context);
+        currentPos.setLatitude(gpsTracker.getLatitude());
+        currentPos.setLongitude(gpsTracker.getLongitude());
+
+        // 음식점 좌표
+        Location restaurantPos = new Location("음식점 좌표");
+        restaurantPos.setLatitude(restaurantData.getLatitude());
+        restaurantPos.setLongitude(restaurantData.getLongitude());
+
+        float distance = currentPos.distanceTo(restaurantPos);
+
+
         if (!brandList.isEmpty()) {
-            customViewHolder.tvBrandName.setText(brandList.get(position).getBrandName());
-            customViewHolder.tvCategory.setText(brandList.get(position).getCategory());
-            customViewHolder.tvPhoneNum.setText(brandList.get(position).getPhoneNum());
-            customViewHolder.tvAddress.setText(brandList.get(position).getAddress());
-            customViewHolder.tvDistance.setText(brandList.get(position).getDistance() + "m");
-            customViewHolder.startRating.setRating(brandList.get(position).getStarRating());
+            customViewHolder.tvBrandName.setText(restaurantData.getBrandName());
+            customViewHolder.tvCategory.setText(restaurantData.getCategory());
+            customViewHolder.tvPhoneNum.setText(restaurantData.getPhoneNum());
+            customViewHolder.tvAddress.setText(restaurantData.getAddress());
+            customViewHolder.startRating.setRating(restaurantData.getStarRating());
 
             // 글자 흘러가게 하기
             // singleLine = true, ellipsize = marquee 처리도 함께
             customViewHolder.tvAddress.setSelected(true);
+
+            //거리에 따라서 1000m가 넘어가면 km단위로 바꿈
+            if(distance>1000){
+                distance = distance/1000;
+                customViewHolder.tvDistance.setText(String.format("%.1f", distance)+" km");
+            }else{
+                customViewHolder.tvDistance.setText((int)distance +"m");
+            }
         }
     }
 

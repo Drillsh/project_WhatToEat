@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.location.Location;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +23,9 @@ import androidx.viewpager2.widget.ViewPager2;
 import java.util.ArrayList;
 
 import kr.or.mrhi.android.whattoeat_project.R;
+import kr.or.mrhi.android.whattoeat_project.controller.RestaurantDB_Controller;
+import kr.or.mrhi.android.whattoeat_project.function.GpsTracker;
+import kr.or.mrhi.android.whattoeat_project.model.CommentData;
 import kr.or.mrhi.android.whattoeat_project.model.RestaurantData;
 
 //뷰페이저 어댑터 클래스
@@ -45,22 +49,47 @@ public class ViewPagerAdapter extends RecyclerView.Adapter<ViewPagerAdapter.MyVi
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
+        int index = position % arrayList.size();
+        RestaurantData restaurantData = arrayList.get(index);
 
-        RestaurantData restaurantData = arrayList.get(position);
+
+        RestaurantDB_Controller restaurantDB_controller = RestaurantDB_Controller.getInstance(context);
+        Bitmap bitmap = null;
+        ArrayList<CommentData> commentDataList = restaurantDB_controller.selectCommentDB(restaurantData.getBrandName());
 
         //지정폴더에서  path값으로 비트맵을 만든다.
         BitmapFactory.Options bfo = new BitmapFactory.Options();
         bfo.inSampleSize = 2;
-        if (restaurantData.getImgPath() != null) {
-            Bitmap bitmap = BitmapFactory.decodeFile(restaurantData.getImgPath(), bfo);
+        if (commentDataList.size() != 0) {
+            bitmap = BitmapFactory.decodeFile(commentDataList.get(0).getImgPath(), bfo);
             holder.ivBrandImg.setImageBitmap(bitmap);
         } else {
-            holder.ivBrandImg.setImageDrawable(context.getResources().getDrawable(R.drawable.pika));
+            holder.ivBrandImg.setImageDrawable(context.getResources().getDrawable(R.drawable.chefpikachu));
+        }
+
+        // 현재 좌표
+        Location currentPos = new Location("현재 좌표");
+        GpsTracker gpsTracker = new GpsTracker(context);
+        currentPos.setLatitude(gpsTracker.getLatitude());
+        currentPos.setLongitude(gpsTracker.getLongitude());
+
+        // 음식점 좌표
+        Location restaurantPos = new Location("음식점 좌표");
+        restaurantPos.setLatitude(restaurantData.getLatitude());
+        restaurantPos.setLongitude(restaurantData.getLongitude());
+
+        float distance = currentPos.distanceTo(restaurantPos);
+
+        //거리에 따라서 1000m가 넘어가면 km단위로 바꿈
+        if (distance > 1000) {
+            distance = distance / 1000;
+            holder.tvDistance.setText(String.format("%.1f", distance) + " km");
+        } else {
+            holder.tvDistance.setText((int) distance + "m");
         }
 
         holder.tvBrandName.setText(restaurantData.getBrandName());
         holder.tvCategory.setText(restaurantData.getCategory());
-        holder.tvDistance.setText(String.valueOf(restaurantData.getDistance()));
         holder.tvPhoneNum.setText(restaurantData.getPhoneNum());
         holder.tvAddress.setText(restaurantData.getAddress());
         holder.starRating.setRating(restaurantData.getStarRating());
@@ -68,7 +97,7 @@ public class ViewPagerAdapter extends RecyclerView.Adapter<ViewPagerAdapter.MyVi
 
     @Override
     public int getItemCount() {
-        return arrayList.size();
+        return Integer.MAX_VALUE;
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder {

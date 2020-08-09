@@ -3,6 +3,7 @@ package kr.or.mrhi.android.whattoeat_project.adapter;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.location.Location;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +20,7 @@ import java.util.ArrayList;
 import kr.or.mrhi.android.whattoeat_project.R;
 import kr.or.mrhi.android.whattoeat_project.activity.ListActivity;
 import kr.or.mrhi.android.whattoeat_project.controller.RestaurantDB_Controller;
+import kr.or.mrhi.android.whattoeat_project.function.GpsTracker;
 import kr.or.mrhi.android.whattoeat_project.model.CommentData;
 import kr.or.mrhi.android.whattoeat_project.model.RestaurantData;
 
@@ -35,7 +37,9 @@ public class TotalListAdapter extends RecyclerView.Adapter<TotalListAdapter.Cust
     private OnItemLongClickListener mLongListener = null;
 
     // 생성자
-    public TotalListAdapter(Context context) {this.context = context;}
+    public TotalListAdapter(Context context) {
+        this.context = context;
+    }
 
     @NonNull
     @Override
@@ -56,18 +60,39 @@ public class TotalListAdapter extends RecyclerView.Adapter<TotalListAdapter.Cust
         //지정폴더에서  path값으로 비트맵을 만든다.
         BitmapFactory.Options bfo = new BitmapFactory.Options();
         bfo.inSampleSize = 2;
-        if(commentDataList.size() != 0){
-            bitmap = BitmapFactory.decodeFile(commentDataList.get(0).getImgPath(),bfo);
+        if (commentDataList.size() != 0) {
+            bitmap = BitmapFactory.decodeFile(commentDataList.get(0).getImgPath(), bfo);
             customViewHolder.ivFoodPicture.setImageBitmap(bitmap);
-        }else{
+        } else {
             customViewHolder.ivFoodPicture.setImageDrawable(context.getResources().getDrawable(R.drawable.chefpikachu));
+        }
+
+        // 현재 좌표
+        Location currentPos = new Location("현재 좌표");
+        GpsTracker gpsTracker = new GpsTracker(context);
+        currentPos.setLatitude(gpsTracker.getLatitude());
+        currentPos.setLongitude(gpsTracker.getLongitude());
+
+        // 음식점 좌표
+        Location restaurantPos = new Location("음식점 좌표");
+        restaurantPos.setLatitude(brandList.get(position).getLatitude());
+        restaurantPos.setLongitude(brandList.get(position).getLongitude());
+
+        float distance = currentPos.distanceTo(restaurantPos);
+
+        //거리에 따라서 1000m가 넘어가면 km단위로 바꿈
+        if (distance > 1000) {
+            distance = distance / 1000;
+            customViewHolder.tvDistance.setText(String.format("%.1f", distance) + " km");
+        } else {
+            customViewHolder.tvDistance.setText((int) distance + "m");
         }
 
         customViewHolder.tvEateryName.setText(brandList.get(position).getBrandName());
         customViewHolder.tvEateryName.setSelected(true);
         customViewHolder.tvFoodMenu.setText(brandList.get(position).getCategory());
-        customViewHolder.tvDistance.setText(String.valueOf(brandList.get(position).getDistance())+"M");
-        customViewHolder.tvCallNumber.setText("☎ "+brandList.get(position).getPhoneNum());
+//        customViewHolder.tvDistance.setText(String.valueOf(brandList.get(position).getDistance())+"M");
+        customViewHolder.tvCallNumber.setText("☎ " + brandList.get(position).getPhoneNum());
         customViewHolder.tvAddress.setText(brandList.get(position).getAddress());
         customViewHolder.tvAddress.setSelected(true);
         customViewHolder.ratingBar.setRating(brandList.get(position).getStarRating());
@@ -80,21 +105,21 @@ public class TotalListAdapter extends RecyclerView.Adapter<TotalListAdapter.Cust
     }
 
     // 리사이클러뷰 클릭 이벤트를 위한 인터페이스
-    public interface OnItemClickListener
-    {
+    public interface OnItemClickListener {
         void onItemClick(View v, int pos);
     }
-    public interface OnItemLongClickListener{
+
+    public interface OnItemLongClickListener {
         void onItemLongClick(View v, int pos);
     }
 
     // OnItemClickListener 객체 참조를 어댑터에 전달하는 메서드
-    public void setOnItemClickListener(OnItemClickListener listener)
-    {
+    public void setOnItemClickListener(OnItemClickListener listener) {
         this.mListener = listener;
     }
+
     // OnItemLongClickListener 객체 참조를 어댑터에 전달하는 메서드
-    public void setOnItemLongClickListener(OnItemLongClickListener LongListener){
+    public void setOnItemLongClickListener(OnItemLongClickListener LongListener) {
         this.mLongListener = LongListener;
     }
 
@@ -108,6 +133,7 @@ public class TotalListAdapter extends RecyclerView.Adapter<TotalListAdapter.Cust
         RatingBar ratingBar;
 
         int pos = 0;
+
         public CustomViewHolder(@NonNull View itemView) {
             super(itemView);
             ivFoodPicture = (ImageView) itemView.findViewById(R.id.ivFoodPicture);
@@ -134,7 +160,7 @@ public class TotalListAdapter extends RecyclerView.Adapter<TotalListAdapter.Cust
                 public boolean onLongClick(View view) {
                     pos = getAdapterPosition();
                     if (pos != RecyclerView.NO_POSITION) {
-                        mLongListener.onItemLongClick(view,pos);
+                        mLongListener.onItemLongClick(view, pos);
                     }
                     return true;
                 }

@@ -96,7 +96,7 @@ public class Add_frag extends Fragment implements View.OnClickListener {
     }
 
     // 현재위치 리턴
-    private MapPoint getCurrentPos() {
+    public MapPoint getCurrentPos() {
         // GpsTracker 인스턴스
         GpsTracker gpsTracker = new GpsTracker(mainActivity);
 
@@ -104,7 +104,7 @@ public class Add_frag extends Fragment implements View.OnClickListener {
         double latitude = gpsTracker.getLatitude();
         double longitude = gpsTracker.getLongitude();
 
-        // 현재 좌표로 맵이동
+        // 현재 좌표로 mapPoint 리턴
         return MapPoint.mapPointWithGeoCoord(latitude, longitude);
     }
 
@@ -137,10 +137,6 @@ public class Add_frag extends Fragment implements View.OnClickListener {
         dialog.setTitle("음식점 정보 등록");
         dialog.setView(view);
 
-        TextView tvName = view.findViewById(R.id.tvName);
-        TextView tvAdress = view.findViewById(R.id.tvAdress);
-        TextView tvFood = view.findViewById(R.id.tvFood);
-        TextView tvPhone = view.findViewById(R.id.tvPhone);
         final EditText edtName = view.findViewById(R.id.edtName);
         final EditText edtAdress = view.findViewById(R.id.edtAdress);
         final EditText edtPhone = view.findViewById(R.id.edtPhone);
@@ -166,9 +162,8 @@ public class Add_frag extends Fragment implements View.OnClickListener {
                 String category = spinner.getSelectedItem().toString();
                 String phone = edtPhone.getText().toString();
 
-                // 더미 데이터
                 ArrayList<RestaurantData> restaurantData = new ArrayList<>();
-                restaurantData.add(new RestaurantData(name, category, phone, address, 100, "ss", 2.3f, latitude, longitude));
+                restaurantData.add(new RestaurantData(name, category, phone, address, 0, "", 0f, latitude, longitude));
 
                 // 빈칸 입력시
                 if (name.equals("")) {

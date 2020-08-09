@@ -50,6 +50,7 @@ public class Main_frag extends Fragment implements BrandListAdapter.OnItemClickL
     private Button btnMoreList;
     private Button btnGoMap;
 
+    private BrandListAdapter nearbyListAdapter;
 
     @Override
     public void onAttach(@NonNull Context context) {
@@ -64,6 +65,13 @@ public class Main_frag extends Fragment implements BrandListAdapter.OnItemClickL
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
+    @Override
+    public void onResume() {
+        super.onResume();
+        nearbyListAdapter.notifyDataSetChanged();
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -72,11 +80,10 @@ public class Main_frag extends Fragment implements BrandListAdapter.OnItemClickL
         //View 아이디 찾기
         findViewByIdFunc(view);
 
-
         try {
             // 어댑터 인스턴스
             BrandListAdapter todayListAdapter = new BrandListAdapter(mainActivity, true);
-            BrandListAdapter nearbyListAdapter = new BrandListAdapter(mainActivity, false);
+            nearbyListAdapter = new BrandListAdapter(mainActivity, false);
 
             // LinearLayoutManager 인스턴스
             LinearLayoutManager todayListManager = new LinearLayoutManager(mainActivity);
@@ -92,7 +99,7 @@ public class Main_frag extends Fragment implements BrandListAdapter.OnItemClickL
             ArrayList<RestaurantData> arrayList = getRestaurantData();
             ArrayList<RestaurantData> todayList = new ArrayList<>();
 
-            // 오늘의 매장 추천
+            // 랜덤 매장 추천
             Random rd = new Random();
             int position = rd.nextInt(arrayList.size());
             todayList.add(arrayList.get(position));
@@ -221,46 +228,12 @@ public class Main_frag extends Fragment implements BrandListAdapter.OnItemClickL
         ArrayList<RestaurantData> restaurantDataList = restaurantDB_controller.selectRestaurantData();
 
         if (restaurantDataList.isEmpty()) {
-            Function.settingToast(mainActivity, "데이터 가져오기 실패");
+            Log.d("getRestaurantData", "데이터 가져오기 실패");
         } else {
-            Function.settingToast(mainActivity, "데이터 가져오기 성공");
+            Log.d("getRestaurantData", "데이터 가져오기 성공");
         }
 
         return restaurantDataList;
-    }
-
-    // 음식점 데이터 삽입
-    @RequiresApi(api = Build.VERSION_CODES.N)
-    private void insertRestaurantData(ArrayList<RestaurantData> restaurantDataList) {
-
-        // 음식점 DB 컨트롤러 인스턴스
-        RestaurantDB_Controller restaurantDB_controller = RestaurantDB_Controller.getInstance(mainActivity);
-
-        // DB에 데이터 삽입
-        boolean returnValue = restaurantDB_controller.insertRestaurantData(restaurantDataList);
-
-        if (returnValue) {
-//            Function.settingToast(mainActivity, "데이터 삽입 성공");
-        } else {
-//            Function.settingToast(mainActivity, "데이터 삽입 실패");
-        }
-    }
-
-    // 음식점 데이터 삭제
-    @RequiresApi(api = Build.VERSION_CODES.N)
-    private void deleteRestaurantData(RestaurantData restaurantData) {
-
-        // 음식점 DB 컨트롤러 인스턴스
-        RestaurantDB_Controller restaurantDB_controller = RestaurantDB_Controller.getInstance(mainActivity);
-
-        // DB에서 데이터 삭제
-        boolean returnValue = restaurantDB_controller.deleteRestaurantData(restaurantData);
-
-        if (returnValue) {
-            Function.settingToast(mainActivity, "데이터 삭제 성공");
-        } else {
-            Function.settingToast(mainActivity, "데이터 삭제 실패");
-        }
     }
 
     // recyclerview 아이템 클릭 오버라이드

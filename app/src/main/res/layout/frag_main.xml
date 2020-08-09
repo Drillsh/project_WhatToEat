@@ -90,7 +90,7 @@
             android:layout_marginRight="5dp"
             android:layout_marginBottom="5dp"
             android:layout_weight="2.5"
-            app:cardBackgroundColor="#F2B807"
+            app:cardBackgroundColor="#D94625"
             app:cardCornerRadius="18dp"
             app:cardElevation="0dp">
 
@@ -106,7 +106,7 @@
                     android:layout_height="0dp"
                     android:layout_weight="2"
                     android:gravity="center"
-                    android:text="오늘의 맛집 추천!"
+                    android:text="요기 오때?!"
                     android:textSize="18sp"
                     android:textStyle="bold" />
 
@@ -127,7 +127,7 @@
             android:layout_marginRight="5dp"
             android:layout_marginBottom="5dp"
             android:layout_weight="5.3"
-            app:cardBackgroundColor="#D94625"
+            app:cardBackgroundColor="#F2D022"
             app:cardCornerRadius="18dp"
             app:cardElevation="0dp">
 
@@ -151,7 +151,7 @@
                         android:layout_height="0dp"
                         android:layout_weight="1.2"
                         android:gravity="center"
-                        android:text="내 주변 맛집!"
+                        android:text="내 맛집 리스트!"
                         android:textSize="18sp"
                         android:textStyle="bold" />
 

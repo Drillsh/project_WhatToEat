@@ -157,7 +157,6 @@ public class RestaurantActivity extends AppCompatActivity implements View.OnClic
         boolean returnValue = commentDB.updateRestaurantRating(restaurantData,avgRating);
         if (returnValue) {
             Function.settingToast(getApplicationContext(), "데이터 갱신 성공");
-
         } else {
             Function.settingToast(getApplicationContext(), "데이터 갱신 실패");
         }
@@ -247,10 +246,9 @@ public class RestaurantActivity extends AppCompatActivity implements View.OnClic
                         boolean returnValue = commentDB.insertCommentData(commentData);
 
                         if (returnValue) {
-                            Function.settingToast(getApplicationContext(), "데이터 삽입 성공");
-
+                            Log.d("dialog", "데이터 삽입 성공");
                         } else {
-                            Function.settingToast(getApplicationContext(), "데이터 삽입 실패");
+                            Log.d("dialog", "데이터 삽입 실패");
                         }
 
                         //위에서 저장한 리뷰를 리스트로 뿌려줌
