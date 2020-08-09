@@ -39,8 +39,10 @@ import java.util.Date;
 import java.util.Locale;
 
 import kr.or.mrhi.android.whattoeat_project.R;
+import kr.or.mrhi.android.whattoeat_project.adapter.BrandListAdapter;
 import kr.or.mrhi.android.whattoeat_project.adapter.CommentImageAdapter;
 import kr.or.mrhi.android.whattoeat_project.adapter.CommentListAdapter;
+import kr.or.mrhi.android.whattoeat_project.adapter.TotalListAdapter;
 import kr.or.mrhi.android.whattoeat_project.controller.RestaurantDB_Controller;
 import kr.or.mrhi.android.whattoeat_project.function.Function;
 import kr.or.mrhi.android.whattoeat_project.function.RecyclerDecoration;
@@ -53,6 +55,7 @@ public class RestaurantActivity extends AppCompatActivity implements View.OnClic
     private RatingBar rbTotal;
     private Gallery gallery;
     private RecyclerView commentList;
+
     private CommentListAdapter commentListAdapter;
     private CommentImageAdapter commentImageAdapter;
 
@@ -125,6 +128,7 @@ public class RestaurantActivity extends AppCompatActivity implements View.OnClic
 
         //GalleryView
         commentImageAdapter = new CommentImageAdapter(getApplicationContext());
+        commentImageAdapter.setComImageList(commentArrayList);
         gallery.setAdapter(commentImageAdapter);
 
         rbTotal.setEnabled(false);
@@ -253,7 +257,9 @@ public class RestaurantActivity extends AppCompatActivity implements View.OnClic
                         //위에서 저장한 리뷰를 리스트로 뿌려줌
                         commentListAdapter.setCommentList(commentArrayList);
                         commentList.setAdapter(commentListAdapter);
+                        //리스트 새로고침
                         commentListAdapter.notifyDataSetChanged();
+                        commentImageAdapter.notifyDataSetChanged();
 
                         //해당업체 리뷰 평균 별점
                         restaurantAvgRating();
@@ -315,6 +321,7 @@ public class RestaurantActivity extends AppCompatActivity implements View.OnClic
                 restaurantAvgRating();
                 deleteImageFile(commentData);
                 commentListAdapter.notifyDataSetChanged();
+                commentImageAdapter.notifyDataSetChanged();
             }
         });
         //"아니요" 누를 시 적용되는 이벤트 등록 처리

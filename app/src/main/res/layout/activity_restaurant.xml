@@ -92,7 +92,8 @@
         android:layout_marginLeft="10dp"
         android:layout_marginTop="10dp"
         android:layout_marginRight="10dp"
-        app:cardCornerRadius="18dp">
+        app:cardCornerRadius="18dp"
+        app:cardBackgroundColor="#FDDF23">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -102,8 +103,12 @@
             <Gallery
                 android:id="@+id/gallery"
                 android:layout_width="match_parent"
-                android:layout_height="90dp"
-                android:background="#FDDF23" />
+                android:layout_height="90dp" />
+
+            android:focusable="auto"
+            android:gravity="left"
+            android:spacing="5dp" />
+            >>>>>>> bc16206ba0569ec292265ed0c922306e3eb721ae
         </LinearLayout>
 
     </androidx.cardview.widget.CardView>

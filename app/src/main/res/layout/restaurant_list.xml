@@ -82,6 +82,7 @@
                     android:lines="6"
                     android:textSize="16dp" />
             </LinearLayout>
+
         </LinearLayout>
     </LinearLayout>
 </LinearLayout>
