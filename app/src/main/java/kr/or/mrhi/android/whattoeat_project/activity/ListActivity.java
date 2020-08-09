@@ -122,4 +122,9 @@ public class ListActivity extends AppCompatActivity implements View.OnClickListe
         builder.show();
     }
 
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        totalListAdapter.notifyDataSetChanged();
+    }
 }

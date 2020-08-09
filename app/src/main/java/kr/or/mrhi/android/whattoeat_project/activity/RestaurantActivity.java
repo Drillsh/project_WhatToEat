@@ -230,8 +230,7 @@ public class RestaurantActivity extends AppCompatActivity implements View.OnClic
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
 
-                        /*String downPath = getSaveFolder().getAbsolutePath();
-                        Log.d("다운로드 패스",downPath);*/
+
                         getSaveFolder();
                         copyImageFile();
 
