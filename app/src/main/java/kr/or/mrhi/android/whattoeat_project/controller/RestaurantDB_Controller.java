@@ -45,25 +45,25 @@ public class RestaurantDB_Controller extends SQLiteOpenHelper {
         // 음식점 정보 DB
         db.execSQL(
                 "CREATE TABLE restaurantTBL(" +
-                        "brandName VARCHAR(15) PRIMARY KEY," +
-                        "category VARCHAR(10)," +
-                        "phoneNum VARCHAR(20)," +
-                        "address VARCHAR(30)," +
-                        "distance INTEGER(5)," +
-                        "imgPath VARCHAR(30)," +
-                        "starRating FLOAT(2,1),"+
-                        "latitude DOUBLE(3,8),"+
-                        "longitude DOUBLE(3,8));"
+                        "brandName VARCHAR(15) PRIMARY KEY not null," +
+                        "category VARCHAR(10) not null," +
+                        "phoneNum VARCHAR(20) not null," +
+                        "address VARCHAR(30) not null," +
+                        "distance INTEGER(5) not null," +
+                        "imgPath VARCHAR(30) not null," +
+                        "starRating FLOAT(2,1) not null,"+
+                        "latitude DOUBLE(3,8) not null,"+
+                        "longitude DOUBLE(3,8) not null);"
         );
 
         // 음식점 코멘트 정보 테이블
         db.execSQL(
                 "CREATE TABLE commentTBL(" +
-                        "brandName VARCHAR(15)," +
-                        "imgPath VARCHAR(10)," +
-                        "comment VARCHAR(20)," +
-                        "date VARCHAR(30)," +
-                        "rating FLOAT(2,1));"
+                        "brandName VARCHAR(15) not null," +
+                        "imgPath VARCHAR(30) not null," +
+                        "comment VARCHAR(20) not null," +
+                        "date VARCHAR(30) not null," +
+                        "rating FLOAT(2,1) not null);"
         );
     }
 

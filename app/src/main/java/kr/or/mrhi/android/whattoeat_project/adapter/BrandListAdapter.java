@@ -115,7 +115,6 @@ public class BrandListAdapter extends RecyclerView.Adapter<BrandListAdapter.Cust
             tvAddress = (TextView) itemView.findViewById(R.id.tvAddress);
             startRating = (RatingBar) itemView.findViewById(R.id.starRating);
 
-
             // 클릭 이벤트
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override

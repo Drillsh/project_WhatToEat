@@ -20,6 +20,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TabWidget;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import net.daum.mf.map.api.CalloutBalloonAdapter;
 import net.daum.mf.map.api.MapPOIItem;
@@ -60,7 +61,6 @@ public class MapActivity extends AppCompatActivity implements View.OnClickListen
 
         // getIntent
         Intent intent = getIntent();
-        int brandPosition = intent.getIntExtra("restLocation", 0);
 
         // 카카오맵 인스턴스
         MapView mapView = new MapView(MapActivity.this);
@@ -79,28 +79,15 @@ public class MapActivity extends AppCompatActivity implements View.OnClickListen
         ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getApplicationContext());
         viewPagerAdapter.setArrayList(restaurantDataList);
         viewPager.setAdapter(viewPagerAdapter);
-        viewPager.setOffscreenPageLimit(3);
-        viewPager.setCurrentItem(1000);
-
 
         // 뷰페이저 체인지 리스너
-
         viewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
-
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-                super.onPageScrolled(position, positionOffset, positionOffsetPixels);
-                if (positionOffsetPixels == 0) {
-                    viewPager.setCurrentItem(position);
-                }
-            }
-
+           
             @Override
             public void onPageSelected(int position) {
                 super.onPageSelected(position);
 
-                int index = position % markerList.size();
-                MapPOIItem mapPOIItem = markerList.get(index);
+                MapPOIItem mapPOIItem = markerList.get(position);
 
                 // 해당 좌표로 화면 중심 이동
                 mapView.setMapCenterPoint(mapPOIItem.getMapPoint(), true);
@@ -109,30 +96,8 @@ public class MapActivity extends AppCompatActivity implements View.OnClickListen
             }
         });
 
-        final float pageMargin = getResources().getDimensionPixelOffset(R.dimen.pageMargin);
-        final float pageOffset = getResources().getDimensionPixelOffset(R.dimen.offset);
-
-        viewPager.setPageTransformer(new ViewPager2.PageTransformer() {
-            @Override
-            public void transformPage(@NonNull View page, float position) {
-                float myOffset = position * -(2 * pageOffset + pageMargin);
-                if (position < -1) {
-                    page.setTranslationX(-myOffset);
-                } else if (position <= 1) {
-                    float scaleFactor = Math.max(0.6f, 1 - Math.abs(position - 0.14285715f));
-                    page.setTranslationX(myOffset);
-                    page.setScaleY(scaleFactor);
-                    page.setAlpha(scaleFactor);
-                } else {
-                    page.setAlpha(0f);
-                    page.setTranslationX(myOffset);
-                }
-            }
-        });
-
-
         // 좌표 변환 리스너
-        mapView.setPOIItemEventListener(this);
+//        mapView.setPOIItemEventListener(this);
 
         // 등록된 음식점들을 마커로 찍음
         for (int i = 0; i < restaurantDataList.size(); ++i) {
@@ -155,7 +120,7 @@ public class MapActivity extends AppCompatActivity implements View.OnClickListen
             marker.setMapPoint(mapPoint);
             marker.setMarkerType(MapPOIItem.MarkerType.CustomImage);   // 마커 타입을 커스텀 마커로 지정
             marker.setCustomImageResourceId(R.drawable.marker);        //마커 이미지
-            marker.setCustomImageAutoscale(true);                     // 지도 라이브러리의 스케일 기능을 꺼줌
+            marker.setCustomImageAutoscale(true);                      // 지도 라이브러리의 스케일 기능을 꺼줌
 
             // 맵뷰에 마커 세팅
             mapView.addPOIItem(marker);
@@ -164,23 +129,24 @@ public class MapActivity extends AppCompatActivity implements View.OnClickListen
             markerList.add(marker);
         }
 
-
-        if (intent != null) {
-
+        if (intent.hasExtra("restLocation")) {
             try {
+                int brandPosition = intent.getIntExtra("restLocation", 0);
+
                 MapPOIItem mapPOIItem = markerList.get(brandPosition);
                 // 해당 좌표로 화면 중심 이동
                 mapView.setMapCenterPoint(mapPOIItem.getMapPoint(), true);
                 // 특정 POI(Point Of Interest: 좌표) item 선택
                 mapView.selectPOIItem(mapPOIItem, true);
                 viewPager.setCurrentItem(brandPosition);
+
             } catch (IndexOutOfBoundsException e) {
                 Log.d("MapActivity", e.getMessage());
             }
 
         } else {
             try {
-                MapPOIItem mapPOIItem = markerList.get(0);
+                MapPOIItem mapPOIItem = markerList.get(2);
                 // 해당 좌표로 화면 중심 이동
                 mapView.setMapCenterPoint(mapPOIItem.getMapPoint(), true);
                 // 특정 POI(Point Of Interest: 좌표) item 선택
@@ -241,25 +207,25 @@ public class MapActivity extends AppCompatActivity implements View.OnClickListen
     }
 
     // 커스텀 벌룬 클래스
-    class CustomCalloutBalloonAdapter implements CalloutBalloonAdapter {
-
-        private View mCalloutBalloon;
-
-        public CustomCalloutBalloonAdapter() {
-            mCalloutBalloon = getLayoutInflater().inflate(R.layout.custom_callout_balloon, null);
-        }
-
-        @Override
-        public View getCalloutBalloon(MapPOIItem mapPOIItem) {
-            ((ImageView) mCalloutBalloon.findViewById(R.id.ivImage)).setImageResource(R.drawable.pika);
-            ((TextView) mCalloutBalloon.findViewById(R.id.tvBrandName)).setText(mapPOIItem.getItemName());
-            ((TextView) mCalloutBalloon.findViewById(R.id.tvDesc)).setText("가즈아아아");
-            return mCalloutBalloon;
-        }
-
-        @Override
-        public View getPressedCalloutBalloon(MapPOIItem mapPOIItem) {
-            return null;
-        }
-    }
+//    class CustomCalloutBalloonAdapter implements CalloutBalloonAdapter {
+//
+//        private View mCalloutBalloon;
+//
+//        public CustomCalloutBalloonAdapter() {
+//            mCalloutBalloon = getLayoutInflater().inflate(R.layout.custom_callout_balloon, null);
+//        }
+//
+//        @Override
+//        public View getCalloutBalloon(MapPOIItem mapPOIItem) {
+//            ((ImageView) mCalloutBalloon.findViewById(R.id.ivImage)).setImageResource(R.drawable.pika);
+//            ((TextView) mCalloutBalloon.findViewById(R.id.tvBrandName)).setText(mapPOIItem.getItemName());
+//            ((TextView) mCalloutBalloon.findViewById(R.id.tvDesc)).setText("가즈아아아");
+//            return mCalloutBalloon;
+//        }
+//
+//        @Override
+//        public View getPressedCalloutBalloon(MapPOIItem mapPOIItem) {
+//            return null;
+//        }
+//    }
 }

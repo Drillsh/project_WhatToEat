@@ -38,21 +38,20 @@ public class ViewPagerAdapter extends RecyclerView.Adapter<ViewPagerAdapter.MyVi
     @Override
     public ViewPagerAdapter.MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View view = layoutInflater.inflate(R.layout.main_item, parent, false);
+        View view = layoutInflater.inflate(R.layout.map_item, parent, false);
 
         return new MyViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-        int index = position % arrayList.size();
 
-        RestaurantData restaurantData = arrayList.get(index);
+        RestaurantData restaurantData = arrayList.get(position);
 
         //지정폴더에서  path값으로 비트맵을 만든다.
         BitmapFactory.Options bfo = new BitmapFactory.Options();
         bfo.inSampleSize = 2;
-        if (arrayList.size() != 0) {
+        if (restaurantData.getImgPath() != null) {
             Bitmap bitmap = BitmapFactory.decodeFile(restaurantData.getImgPath(), bfo);
             holder.ivBrandImg.setImageBitmap(bitmap);
         } else {
@@ -65,12 +64,11 @@ public class ViewPagerAdapter extends RecyclerView.Adapter<ViewPagerAdapter.MyVi
         holder.tvPhoneNum.setText(restaurantData.getPhoneNum());
         holder.tvAddress.setText(restaurantData.getAddress());
         holder.starRating.setRating(restaurantData.getStarRating());
-
     }
 
     @Override
     public int getItemCount() {
-        return Integer.MAX_VALUE;
+        return arrayList.size();
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder {

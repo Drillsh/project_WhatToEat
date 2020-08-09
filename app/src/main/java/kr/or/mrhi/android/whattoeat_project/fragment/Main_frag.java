@@ -206,7 +206,6 @@ public class Main_frag extends Fragment implements BrandListAdapter.OnItemClickL
                         mainActivity.setChangeFragment(MainActivity.FRAG_ADD);
                     }
                 }
-
                 break;
         }
     }
@@ -241,9 +240,9 @@ public class Main_frag extends Fragment implements BrandListAdapter.OnItemClickL
         boolean returnValue = restaurantDB_controller.insertRestaurantData(restaurantDataList);
 
         if (returnValue) {
-            Function.settingToast(mainActivity, "데이터 삽입 성공");
+//            Function.settingToast(mainActivity, "데이터 삽입 성공");
         } else {
-            Function.settingToast(mainActivity, "데이터 삽입 실패");
+//            Function.settingToast(mainActivity, "데이터 삽입 실패");
         }
     }
 
