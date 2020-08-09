@@ -3,12 +3,14 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="#2D2A2B"
     android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="140dp"
         android:layout_margin="10dp"
+        android:background="#FDDF23"
         android:orientation="vertical">
 
         <LinearLayout
@@ -26,60 +28,60 @@
         </LinearLayout>
 
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="horizontal">
-
-        <ImageView
-            android:id="@+id/imageView2"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="2"
-            app:srcCompat="@drawable/today_food" />
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_margin="10dp"
-            android:layout_weight="1"
-            android:orientation="vertical">
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/imageView2"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="2"
+                app:srcCompat="@drawable/today_food" />
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:layout_height="match_parent"
+                android:layout_margin="10dp"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/tvComment"
+                        android:layout_width="131dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="한줄평"
+                        android:textSize="16sp" />
+
+                    <RatingBar
+                        android:id="@+id/rbListRating"
+                        style="@style/Widget.AppCompat.RatingBar.Indicator"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:numStars="5" />
+
+                </LinearLayout>
 
                 <TextView
-                    android:id="@+id/tvComment"
-                    android:layout_width="131dp"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_weight="1"
+                    android:id="@+id/tvEditComment"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="#DFEECE"
                     android:gravity="center"
-                    android:text="한줄평"
-                    android:textSize="16sp" />
-
-                <RatingBar
-                    android:id="@+id/rbListRating"
-                    style="@style/Widget.AppCompat.RatingBar.Indicator"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:numStars="5" />
-
+                    android:inputType="textMultiLine"
+                    android:lines="6"
+                    android:textSize="16dp" />
             </LinearLayout>
-
-            <TextView
-                android:id="@+id/tvEditComment"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="#DFEECE"
-                android:gravity="center"
-                android:inputType="textMultiLine"
-                android:lines="6"
-                android:textSize="16dp" />
         </LinearLayout>
-    </LinearLayout>
     </LinearLayout>
 </LinearLayout>

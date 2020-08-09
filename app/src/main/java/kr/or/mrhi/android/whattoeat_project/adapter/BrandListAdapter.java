@@ -1,6 +1,8 @@
 package kr.or.mrhi.android.whattoeat_project.adapter;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +16,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 
 import kr.or.mrhi.android.whattoeat_project.R;
+import kr.or.mrhi.android.whattoeat_project.activity.MainActivity;
+import kr.or.mrhi.android.whattoeat_project.controller.RestaurantDB_Controller;
+import kr.or.mrhi.android.whattoeat_project.model.CommentData;
 import kr.or.mrhi.android.whattoeat_project.model.RestaurantData;
 
 // 음식점 리스트 어댑터
@@ -21,7 +26,9 @@ public class BrandListAdapter extends RecyclerView.Adapter<BrandListAdapter.Cust
 
     private Context context;
     private ArrayList<RestaurantData> brandList;
-
+    private RestaurantDB_Controller restaurantDB_controller;
+    private MainActivity mainActivity = new MainActivity();
+    private ArrayList<CommentData> commentDataList;
     private boolean todayBrandPick;
 
     // 리스너 객체 참조를 저장하는 변수
@@ -45,6 +52,20 @@ public class BrandListAdapter extends RecyclerView.Adapter<BrandListAdapter.Cust
 
     @Override
     public void onBindViewHolder(@NonNull BrandListAdapter.CustomViewHolder customViewHolder, int position) {
+
+        restaurantDB_controller = RestaurantDB_Controller.getInstance(mainActivity);
+        Bitmap bitmap = null;
+        commentDataList = restaurantDB_controller.selectCommentDB(brandList.get(position).getBrandName());
+
+        //지정폴더에서  path값으로 비트맵을 만든다.
+        BitmapFactory.Options bfo = new BitmapFactory.Options();
+        bfo.inSampleSize = 2;
+        if(commentDataList.size() != 0){
+            bitmap = BitmapFactory.decodeFile(commentDataList.get(0).getImgPath(),bfo);
+            customViewHolder.ivImage.setImageBitmap(bitmap);
+        }else{
+            customViewHolder.ivImage.setImageDrawable(context.getResources().getDrawable(R.drawable.chefpikachu));
+        }
 
         if (!brandList.isEmpty()) {
             customViewHolder.tvBrandName.setText(brandList.get(position).getBrandName());
@@ -76,7 +97,7 @@ public class BrandListAdapter extends RecyclerView.Adapter<BrandListAdapter.Cust
     }
 
     public class CustomViewHolder extends RecyclerView.ViewHolder {
-        ImageView imageView;
+        ImageView ivImage;
         TextView tvBrandName;
         TextView tvCategory;
         TextView tvDistance;
@@ -86,7 +107,7 @@ public class BrandListAdapter extends RecyclerView.Adapter<BrandListAdapter.Cust
 
         public CustomViewHolder(@NonNull View itemView) {
             super(itemView);
-
+            ivImage= (ImageView) itemView.findViewById(R.id.ivImage);
             tvBrandName = (TextView) itemView.findViewById(R.id.tvBrandName);
             tvCategory = (TextView) itemView.findViewById(R.id.tvCategory);
             tvDistance = (TextView) itemView.findViewById(R.id.tvDesc);

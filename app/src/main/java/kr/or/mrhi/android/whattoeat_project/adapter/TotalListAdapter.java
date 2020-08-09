@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -59,7 +60,7 @@ public class TotalListAdapter extends RecyclerView.Adapter<TotalListAdapter.Cust
             bitmap = BitmapFactory.decodeFile(commentDataList.get(0).getImgPath(),bfo);
             customViewHolder.ivFoodPicture.setImageBitmap(bitmap);
         }else{
-            customViewHolder.ivFoodPicture.setImageDrawable(context.getResources().getDrawable(R.drawable.pika));
+            customViewHolder.ivFoodPicture.setImageDrawable(context.getResources().getDrawable(R.drawable.chefpikachu));
         }
 
         customViewHolder.tvEateryName.setText(brandList.get(position).getBrandName());
@@ -69,6 +70,8 @@ public class TotalListAdapter extends RecyclerView.Adapter<TotalListAdapter.Cust
         customViewHolder.tvCallNumber.setText("☎ "+brandList.get(position).getPhoneNum());
         customViewHolder.tvAddress.setText(brandList.get(position).getAddress());
         customViewHolder.tvAddress.setSelected(true);
+        customViewHolder.ratingBar.setRating(brandList.get(position).getStarRating());
+        customViewHolder.ratingBar.setEnabled(false);
     }
 
     @Override
@@ -102,7 +105,8 @@ public class TotalListAdapter extends RecyclerView.Adapter<TotalListAdapter.Cust
         TextView tvDistance;
         TextView tvCallNumber;
         TextView tvAddress;
-        Button btnDel;
+        RatingBar ratingBar;
+
         int pos = 0;
         public CustomViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -112,6 +116,7 @@ public class TotalListAdapter extends RecyclerView.Adapter<TotalListAdapter.Cust
             tvDistance = (TextView) itemView.findViewById(R.id.tvDesc);
             tvCallNumber = (TextView) itemView.findViewById(R.id.tvCallNumber);
             tvAddress = (TextView) itemView.findViewById(R.id.tvAddress);
+            ratingBar = (RatingBar) itemView.findViewById(R.id.ratingBar);
 
             // 클릭 이벤트
             itemView.setOnClickListener(new View.OnClickListener() {

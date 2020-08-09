@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import kr.or.mrhi.android.whattoeat_project.R;
 import kr.or.mrhi.android.whattoeat_project.adapter.TotalListAdapter;
 import kr.or.mrhi.android.whattoeat_project.controller.RestaurantDB_Controller;
+import kr.or.mrhi.android.whattoeat_project.function.RecyclerDecoration;
 import kr.or.mrhi.android.whattoeat_project.model.RestaurantData;
 //더보기 클릭시 나오는 액티비티 클래스
 public class ListActivity extends AppCompatActivity implements View.OnClickListener, TotalListAdapter.OnItemClickListener, TotalListAdapter.OnItemLongClickListener {
@@ -52,6 +53,10 @@ public class ListActivity extends AppCompatActivity implements View.OnClickListe
         ibHome =findViewById(R.id.ibHome);
         ibMap =findViewById(R.id.ibMap);
         recyclerView =findViewById(R.id.recyclerView);
+
+        //recyclerView 사이 간격 조절
+        RecyclerDecoration decoration = new RecyclerDecoration(20);
+        recyclerView.addItemDecoration(decoration);
     }
 
     private void setInitListener() {
@@ -66,6 +71,7 @@ public class ListActivity extends AppCompatActivity implements View.OnClickListe
 
         //이벤트 등록
         ibHome.setOnClickListener(this);
+        ibMap.setOnClickListener(this);
         totalListAdapter.setOnItemClickListener(this);
         totalListAdapter.setOnItemLongClickListener(this);
     }
@@ -77,6 +83,11 @@ public class ListActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.ibHome :
                 finish();
                 break;
+            case R.id.ibMap:
+                Intent intent = new Intent(getApplicationContext(),MapActivity.class);
+                startActivity(intent);
+                break;
+
         }
     }
     //리사이클뷰 클릭 이벤트 등록 처리
@@ -84,8 +95,7 @@ public class ListActivity extends AppCompatActivity implements View.OnClickListe
     public void onItemClick(View v, int pos) {
       Intent intent = new Intent(getApplicationContext(),RestaurantActivity.class);
       intent.putExtra("number",pos);
-      startActivityForResult(intent,1011);
-      finish();
+      startActivity(intent);
     }
     //리사이클뷰 롱클릭 이벤트 등록 처리
     @Override

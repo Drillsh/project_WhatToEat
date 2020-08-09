@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#2D2A2B"
     android:orientation="vertical"
     tools:context=".activity.RestaurantActivity">
 
@@ -13,6 +14,7 @@
         android:layout_marginLeft="10dp"
         android:layout_marginTop="10dp"
         android:layout_marginRight="10dp"
+        app:cardBackgroundColor="#FDDF23"
         app:cardCornerRadius="18dp">
 
         <LinearLayout
@@ -26,7 +28,8 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:text="음식점 이름"
-                android:textSize="25sp" />
+                android:textSize="25sp"
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/tvRestAdress"
@@ -37,7 +40,8 @@
                 android:marqueeRepeatLimit="marquee_forever"
                 android:singleLine="true"
                 android:text="주소"
-                android:textSize="20sp" />
+                android:textSize="20sp"
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/tvRestContact"
@@ -45,7 +49,8 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:text="연락처"
-                android:textSize="20sp" />
+                android:textSize="20sp"
+                android:textStyle="bold" />
 
             <RatingBar
                 android:id="@+id/rbTotal"
@@ -97,7 +102,8 @@
             <Gallery
                 android:id="@+id/gallery"
                 android:layout_width="match_parent"
-                android:layout_height="90dp" />
+                android:layout_height="90dp"
+                android:background="#FDDF23" />
         </LinearLayout>
 
     </androidx.cardview.widget.CardView>
@@ -108,6 +114,7 @@
         android:layout_marginLeft="10dp"
         android:layout_marginTop="10dp"
         android:layout_marginRight="10dp"
+        app:cardBackgroundColor="#FDDF23"
         app:cardCornerRadius="18dp">
 
         <LinearLayout
@@ -127,7 +134,8 @@
                     android:layout_weight="1"
                     android:gravity="center"
                     android:text="나만의 한줄평"
-                    android:textSize="16dp" />
+                    android:textSize="16dp"
+                    android:textStyle="bold" />
 
                 <Button
                     android:id="@+id/btnAddComment"
@@ -148,7 +156,8 @@
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/commentList"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+                android:layout_height="match_parent"
+                android:background="#FCE525" />
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 </LinearLayout>

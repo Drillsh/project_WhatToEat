@@ -3,8 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#0FFFFFFF"
-    android:orientation="vertical" >
+    android:background="#2D2A2B"
+    android:orientation="vertical">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -33,7 +33,7 @@
                         android:id="@+id/imageView"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:background="#FFFFFF"
+                        android:background="#FDDF23"
                         app:srcCompat="@drawable/banner" />
                 </LinearLayout>
 
@@ -45,7 +45,7 @@
                 android:layout_margin="5dp"
                 android:layout_marginBottom="10dp"
                 android:layout_weight="1"
-                app:cardBackgroundColor="#AE8BC34A"
+                app:cardBackgroundColor="#FDDF23"
                 app:cardCornerRadius="18dp">
 
                 <LinearLayout

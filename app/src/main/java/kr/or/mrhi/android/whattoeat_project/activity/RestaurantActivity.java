@@ -43,6 +43,7 @@ import kr.or.mrhi.android.whattoeat_project.adapter.CommentImageAdapter;
 import kr.or.mrhi.android.whattoeat_project.adapter.CommentListAdapter;
 import kr.or.mrhi.android.whattoeat_project.controller.RestaurantDB_Controller;
 import kr.or.mrhi.android.whattoeat_project.function.Function;
+import kr.or.mrhi.android.whattoeat_project.function.RecyclerDecoration;
 import kr.or.mrhi.android.whattoeat_project.model.CommentData;
 import kr.or.mrhi.android.whattoeat_project.model.RestaurantData;
 
@@ -169,6 +170,10 @@ public class RestaurantActivity extends AppCompatActivity implements View.OnClic
         gallery = findViewById(R.id.gallery);
         commentList = findViewById(R.id.commentList);
         rbTotal = findViewById(R.id.rbTotal);
+
+        //rvNearbyBrandList 아이템 간의 간격 설정
+        RecyclerDecoration decoration = new RecyclerDecoration(20);
+        commentList.addItemDecoration(decoration);
 
         btnRestCall.setOnClickListener(this);
         btnRestLocation.setOnClickListener(this);

@@ -4,12 +4,17 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -17,16 +22,27 @@ import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 
+import com.bumptech.glide.Glide;
 import com.kakao.network.ErrorResult;
 import com.kakao.usermgmt.ApiErrorCode;
 import com.kakao.usermgmt.UserManagement;
 import com.kakao.usermgmt.callback.LogoutResponseCallback;
 import com.kakao.usermgmt.callback.UnLinkResponseCallback;
 
+import org.w3c.dom.Text;
+
+import java.io.BufferedInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+
 import kr.or.mrhi.android.whattoeat_project.R;
 import kr.or.mrhi.android.whattoeat_project.activity.MainActivity;
 import kr.or.mrhi.android.whattoeat_project.function.Function;
 import kr.or.mrhi.android.whattoeat_project.kakaologin.LoginActivity;
+import kr.or.mrhi.android.whattoeat_project.model.UserData;
 
 // 사용자 화면 프래그먼트
 public class User_frag extends Fragment implements View.OnClickListener{
@@ -34,6 +50,10 @@ public class User_frag extends Fragment implements View.OnClickListener{
     private MainActivity mainActivity;
     private Button btnLogout;
     private Button btnSignout;
+    private TextView tvUserName;
+    private TextView tvUserEmail;
+    private ImageView ivUserImage;
+    private UserData userData;
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
@@ -51,15 +71,46 @@ public class User_frag extends Fragment implements View.OnClickListener{
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.frag_user, container, false);
+        //user정보를 받아 오는 함수
+        userData = loadUserData();
         //아이디를 찾는 함수
         findViewByIdFunction(view);
+        //받은 정보를 화면에 매치시켜주는 함수
+        settingUserData(userData);
         return view;
     }
+    //받은 정보를 화면에 매치시켜주는 함수
+    private void settingUserData(UserData userData) {
+        tvUserName.setText(userData.getUserNickName());
+        tvUserName.setSelected(true);
+        tvUserEmail.setText(userData.getEmail());
+        tvUserEmail.setSelected(true);
+        //build.gradle(Module:app)에 dependencies밑에 두가지 추가가 필요하다.
+        //implementation 'com.github.bumptech.glide:glide:4.8.0'
+        //annotationProcessor 'com.github.bumptech.glide:compiler:4.8.0'
+        //이미지 처리 라이브러리를 이용해 프로필 사진URL을 이용해 이미지 뷰에 적용한다.
+        if(userData.getProfileImagePath() != null){
+            Glide.with(mainActivity.getApplicationContext()).load(userData.getProfileImagePath()).into(ivUserImage);
+        }else{
+            ivUserImage.setImageDrawable(mainActivity.getResources().getDrawable(R.drawable.chefpikachu));
+        }
+
+    }
+
+    //user정보를 받아 오는 함수
+    private UserData loadUserData() {
+        Intent intent = mainActivity.getIntent();
+        UserData userData =intent.getParcelableExtra("userData");
+        return userData;
+    }
+
     //아이디를 찾는 함수
     private void findViewByIdFunction(View view) {
         btnLogout =view.findViewById(R.id.btnLogout);
         btnSignout =view.findViewById(R.id.btnSignout);
-
+        tvUserName = (TextView) view.findViewById(R.id.tvUserName);
+        tvUserEmail =(TextView) view.findViewById(R.id.tvUserEmail);
+        ivUserImage = (ImageView)view.findViewById(R.id.ivUserImage);
         //이벤트 등록
         btnLogout.setOnClickListener(this);
         btnSignout.setOnClickListener(this);

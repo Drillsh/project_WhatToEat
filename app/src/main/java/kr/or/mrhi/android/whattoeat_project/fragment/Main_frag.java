@@ -35,6 +35,7 @@ import kr.or.mrhi.android.whattoeat_project.activity.RestaurantActivity;
 import kr.or.mrhi.android.whattoeat_project.adapter.BrandListAdapter;
 import kr.or.mrhi.android.whattoeat_project.controller.RestaurantDB_Controller;
 import kr.or.mrhi.android.whattoeat_project.function.Function;
+import kr.or.mrhi.android.whattoeat_project.function.RecyclerDecoration;
 import kr.or.mrhi.android.whattoeat_project.model.RestaurantData;
 
 // 메인 화면 프래그먼트
@@ -138,6 +139,10 @@ public class Main_frag extends Fragment implements BrandListAdapter.OnItemClickL
         rvNearbyBrandList = (RecyclerView) view.findViewById(R.id.nearbyBrandList);
         btnMoreList = (Button) view.findViewById(R.id.btnMoreList);
         btnGoMap = (Button) view.findViewById(R.id.btnGoMap);
+
+        //rvNearbyBrandList 아이템 간의 간격 설정
+        RecyclerDecoration decoration = new RecyclerDecoration(20);
+        rvNearbyBrandList.addItemDecoration(decoration);
 
         //이벤트 등록
         btnMoreList.setOnClickListener(this);

@@ -13,11 +13,14 @@
         android:layout_width="296dp"
         android:layout_height="257dp"
         android:layout_marginTop="40dp"
+        android:scaleType="fitXY"
+        android:scaleX="2"
+        android:scaleY="2"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.495"
+        app:layout_constraintHorizontal_bias="0.73"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/kakaotalk_icon" />
+        app:srcCompat="@drawable/titleimage" />
 
     <com.kakao.usermgmt.LoginButton
         android:id="@+id/loginButton"
