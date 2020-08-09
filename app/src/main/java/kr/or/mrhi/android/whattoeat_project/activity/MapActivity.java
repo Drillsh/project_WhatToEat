@@ -1,8 +1,11 @@
 package kr.or.mrhi.android.whattoeat_project.activity;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.view.ViewCompat;
 import androidx.viewpager.widget.ViewPager;
+import androidx.viewpager2.widget.ViewPager2;
 
 import android.content.Intent;
 import android.location.Address;
@@ -10,10 +13,12 @@ import android.location.Geocoder;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.DragEvent;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TabWidget;
 import android.widget.TextView;
 
 import net.daum.mf.map.api.CalloutBalloonAdapter;
@@ -40,7 +45,7 @@ public class MapActivity extends AppCompatActivity implements View.OnClickListen
     private ImageButton btnGoList;
     private TextView tvMapTitle;
     private LinearLayout map_view;
-    private ViewPager viewPager;
+    private ViewPager2 viewPager;
 
     private ArrayList<MapPOIItem> markerList = new ArrayList<>();
 
@@ -74,30 +79,57 @@ public class MapActivity extends AppCompatActivity implements View.OnClickListen
         ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getApplicationContext());
         viewPagerAdapter.setArrayList(restaurantDataList);
         viewPager.setAdapter(viewPagerAdapter);
+        viewPager.setOffscreenPageLimit(3);
+        viewPager.setCurrentItem(1000);
+
 
         // 뷰페이저 체인지 리스너
-        viewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+
+        viewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
+
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
+                super.onPageScrolled(position, positionOffset, positionOffsetPixels);
+                if (positionOffsetPixels == 0) {
+                    viewPager.setCurrentItem(position);
+                }
             }
 
             @Override
             public void onPageSelected(int position) {
+                super.onPageSelected(position);
 
-                MapPOIItem mapPOIItem = markerList.get(position);
+                int index = position % markerList.size();
+                MapPOIItem mapPOIItem = markerList.get(index);
 
                 // 해당 좌표로 화면 중심 이동
                 mapView.setMapCenterPoint(mapPOIItem.getMapPoint(), true);
                 // 특정 POI(Point Of Interest: 좌표) item 선택
                 mapView.selectPOIItem(mapPOIItem, true);
             }
+        });
 
+        final float pageMargin = getResources().getDimensionPixelOffset(R.dimen.pageMargin);
+        final float pageOffset = getResources().getDimensionPixelOffset(R.dimen.offset);
+
+        viewPager.setPageTransformer(new ViewPager2.PageTransformer() {
             @Override
-            public void onPageScrollStateChanged(int state) {
-
+            public void transformPage(@NonNull View page, float position) {
+                float myOffset = position * -(2 * pageOffset + pageMargin);
+                if (position < -1) {
+                    page.setTranslationX(-myOffset);
+                } else if (position <= 1) {
+                    float scaleFactor = Math.max(0.6f, 1 - Math.abs(position - 0.14285715f));
+                    page.setTranslationX(myOffset);
+                    page.setScaleY(scaleFactor);
+                    page.setAlpha(scaleFactor);
+                } else {
+                    page.setAlpha(0f);
+                    page.setTranslationX(myOffset);
+                }
             }
         });
+
 
         // 좌표 변환 리스너
         mapView.setPOIItemEventListener(this);
@@ -166,7 +198,7 @@ public class MapActivity extends AppCompatActivity implements View.OnClickListen
         btnGoList = (ImageButton) findViewById(R.id.btnGoList);
         tvMapTitle = (TextView) findViewById(R.id.tvMapTitle);
         map_view = (LinearLayout) findViewById(R.id.map_view);
-        viewPager = (ViewPager) findViewById(R.id.viewPager);
+        viewPager = (ViewPager2) findViewById(R.id.viewPager);
 
         btnGoList.setOnClickListener(this);
         btnGoMain.setOnClickListener(this);

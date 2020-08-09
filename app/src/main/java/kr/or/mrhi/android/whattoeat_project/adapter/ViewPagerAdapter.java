@@ -1,6 +1,9 @@
 package kr.or.mrhi.android.whattoeat_project.adapter;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,65 +12,89 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentPagerAdapter;
+import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.PagerAdapter;
+import androidx.viewpager2.widget.ViewPager2;
 
 import java.util.ArrayList;
 
 import kr.or.mrhi.android.whattoeat_project.R;
 import kr.or.mrhi.android.whattoeat_project.model.RestaurantData;
+
 //뷰페이저 어댑터 클래스
-public class ViewPagerAdapter extends PagerAdapter {
+public class ViewPagerAdapter extends RecyclerView.Adapter<ViewPagerAdapter.MyViewHolder> {
+
     private Context context;
     private ArrayList<RestaurantData> arrayList;
 
     public ViewPagerAdapter(Context context) {
         this.context = context;
     }
-    //데이터 리스트에서 인자로 넘어온 position에 해당하는 아이템 항목에 대한 페이지를 생성
+
     @NonNull
     @Override
-    public Object instantiateItem(@NonNull ViewGroup container, int position) {
-        LayoutInflater layoutInflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View view=layoutInflater.inflate(R.layout.main_item,null);
+    public ViewPagerAdapter.MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View view = layoutInflater.inflate(R.layout.main_item, parent, false);
 
-        ImageView ivBrandImg = view.findViewById(R.id.ivImage);
-        TextView tvBrandName = view.findViewById(R.id.tvBrandName);
-        TextView tvCategory = view.findViewById(R.id.tvCategory);
-        TextView tvDistance = view.findViewById(R.id.tvDesc);
-        TextView tvPhoneNum = view.findViewById(R.id.tvPhoneNum);
-        TextView tvAddress = view.findViewById(R.id.tvAddress);
-        tvAddress.setSelected(true);
-        RatingBar starRating = view.findViewById(R.id.starRating);
-
-        RestaurantData restaurantData = arrayList.get(position);
-        //ivBrandImg;
-        tvBrandName.setText(restaurantData.getBrandName());
-        tvCategory.setText(restaurantData.getCategory());
-        tvDistance.setText(String.valueOf(restaurantData.getDistance()));
-        tvPhoneNum.setText(restaurantData.getPhoneNum());
-        tvAddress.setText(restaurantData.getAddress());
-        starRating.setRating(restaurantData.getStarRating());
-
-        container.addView(view);
-
-        return view;
+        return new MyViewHolder(view);
     }
-    //Adapter가 관리하는 데이터 리스트의 총개수
+
     @Override
-    public int getCount() {
-        return arrayList.size();
+    public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
+        int index = position % arrayList.size();
+
+        RestaurantData restaurantData = arrayList.get(index);
+
+        //지정폴더에서  path값으로 비트맵을 만든다.
+        BitmapFactory.Options bfo = new BitmapFactory.Options();
+        bfo.inSampleSize = 2;
+        if (arrayList.size() != 0) {
+            Bitmap bitmap = BitmapFactory.decodeFile(restaurantData.getImgPath(), bfo);
+            holder.ivBrandImg.setImageBitmap(bitmap);
+        } else {
+            holder.ivBrandImg.setImageDrawable(context.getResources().getDrawable(R.drawable.pika));
+        }
+
+        holder.tvBrandName.setText(restaurantData.getBrandName());
+        holder.tvCategory.setText(restaurantData.getCategory());
+        holder.tvDistance.setText(String.valueOf(restaurantData.getDistance()));
+        holder.tvPhoneNum.setText(restaurantData.getPhoneNum());
+        holder.tvAddress.setText(restaurantData.getAddress());
+        holder.starRating.setRating(restaurantData.getStarRating());
+
     }
-    //페이지가 특정 키와 연관되는지 체크
+
     @Override
-    public boolean isViewFromObject(@NonNull View view, @NonNull Object object) {
-        return (view == (View)object);
+    public int getItemCount() {
+        return Integer.MAX_VALUE;
     }
-    //Adapter가 관리하는 데이터 리스트에서 인자로 넘어온 position에 해당하는
-    //데이터 항목을 생성된 페이지를 제거
-    @Override
-    public void destroyItem(@NonNull ViewGroup container, int position, @NonNull Object object) {
-        container.removeView((View) object);
+
+    public class MyViewHolder extends RecyclerView.ViewHolder {
+        ImageView ivBrandImg;
+        TextView tvBrandName;
+        TextView tvCategory;
+        TextView tvDistance;
+        TextView tvPhoneNum;
+        TextView tvAddress;
+        RatingBar starRating;
+
+        public MyViewHolder(@NonNull View view) {
+            super(view);
+            ivBrandImg = view.findViewById(R.id.ivImage);
+            tvBrandName = view.findViewById(R.id.tvBrandName);
+            tvCategory = view.findViewById(R.id.tvCategory);
+            tvDistance = view.findViewById(R.id.tvDesc);
+            tvPhoneNum = view.findViewById(R.id.tvPhoneNum);
+            tvAddress = view.findViewById(R.id.tvAddress);
+            tvAddress.setSelected(true);
+            starRating = view.findViewById(R.id.starRating);
+        }
     }
+
     //get, set
     public Context getContext() {
         return context;

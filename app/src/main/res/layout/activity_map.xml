@@ -70,14 +70,15 @@
             android:layout_height="match_parent"
             android:orientation="vertical"></LinearLayout>
 
-        <androidx.viewpager.widget.ViewPager
+        <androidx.viewpager2.widget.ViewPager2
             android:id="@+id/viewPager"
-            android:layout_width="match_parent"
+            android:layout_width="300dp"
             android:layout_height="120dp"
-            android:layout_gravity="bottom"
+            android:layout_gravity="bottom|center"
             android:layout_marginBottom="10dp"
+            android:clipChildren="false"
             android:clipToPadding="false"
-            android:overScrollMode="never"></androidx.viewpager.widget.ViewPager>
+            android:overScrollMode="never"></androidx.viewpager2.widget.ViewPager2>
 
     </FrameLayout>
 

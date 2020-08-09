@@ -10,6 +10,8 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -40,14 +42,18 @@ import kr.or.mrhi.android.whattoeat_project.function.GpsTracker;
 import kr.or.mrhi.android.whattoeat_project.model.RestaurantData;
 
 // 음식점 추가 프래그먼트
-public class Add_frag extends Fragment {
+public class Add_frag extends Fragment implements View.OnClickListener {
 
     private MainActivity mainActivity;
-    private ImageView gpsMarker;
 
-    private FloatingActionButton fbMenu;
-    private FloatingActionButton fbAdd;
-    private FloatingActionButton fbCurrentPos;
+    private ImageView gpsMarker;
+    private FloatingActionButton fbMenu, fbAdd, fbCurrentPos;
+    private LinearLayout map_view;
+
+    private Animation fb_open, fb_close;
+
+    private MapView mapView;
+    private boolean isFbOpen;
 
     @Override
     public void onAttach(@NonNull Context context) {
@@ -66,33 +72,18 @@ public class Add_frag extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.frag_add, container, false);
 
-        gpsMarker = (ImageView) view.findViewById(R.id.gpsMarker);
-        fbMenu = (FloatingActionButton) view.findViewById(R.id.fbMenu);
-        LinearLayout map_view = view.findViewById(R.id.mapView);
+        // 초기화
+        initialize(view);
 
-        // gps marker 알파값 조정
-        gpsMarker.setAlpha(120);
-
-        // 카카오맵 인스턴스
-        MapView mapView = new MapView(mainActivity);
-
-        // GpsTracker 인스턴스
-        GpsTracker gpsTracker = new GpsTracker(view.getContext());
-
-        // 현재 좌표
-        double latitude = gpsTracker.getLatitude();
-        double longitude = gpsTracker.getLongitude();
-
-        // 현재 좌표로 맵이동
-        MapPoint mapPoint = MapPoint.mapPointWithGeoCoord(latitude, longitude);
-        mapView.setMapCenterPoint(mapPoint, true);
+        // 현재 위치로 맵 세팅
+        mapView.setMapCenterPoint(getCurrentPos(), true);
         mapView.setZoomLevel(-1, true);
 
         // 주소 데이터 받아옴
         Bundle bundle = this.getArguments();
         if (bundle != null) {
             double[] pos = bundle.getDoubleArray("searchResult");
-            mapPoint = MapPoint.mapPointWithGeoCoord(pos[0], pos[1]);
+            MapPoint mapPoint = MapPoint.mapPointWithGeoCoord(pos[0], pos[1]);
 
             mapView.setMapCenterPoint(mapPoint, true);
         }
@@ -101,30 +92,42 @@ public class Add_frag extends Fragment {
         map_view.addView(mapView);
 
 
-        // 일단 메뉴버튼 누르면 등록되도록
-        fbMenu.setOnClickListener(new View.OnClickListener() {
-            @RequiresApi(api = Build.VERSION_CODES.N)
-            @Override
-            public void onClick(View v) {
-
-                // 화면 중앙 좌표
-                MapPoint mapPoint = mapView.getMapCenterPoint();
-
-                // 위도, 경도 가져옴
-                double latitude = mapPoint.getMapPointGeoCoord().latitude;
-                double longitude = mapPoint.getMapPointGeoCoord().longitude;
-
-                // 위도,경도로 주소 가져오기
-                String address = getCurrentAddress(latitude, longitude);
-                address = address.substring(5);
-                Function.settingToast(mainActivity, address);
-
-                // 다이얼로그
-                showDialog(latitude, longitude, address);
-            }
-        });
-
         return view;
+    }
+
+    // 현재위치 리턴
+    private MapPoint getCurrentPos() {
+        // GpsTracker 인스턴스
+        GpsTracker gpsTracker = new GpsTracker(mainActivity);
+
+        // 현재 좌표
+        double latitude = gpsTracker.getLatitude();
+        double longitude = gpsTracker.getLongitude();
+
+        // 현재 좌표로 맵이동
+        return MapPoint.mapPointWithGeoCoord(latitude, longitude);
+    }
+
+    // 초기화
+    private void initialize(View view) {
+        // 컴포넌트 인스턴스
+        gpsMarker = (ImageView) view.findViewById(R.id.gpsMarker);
+        fbMenu = (FloatingActionButton) view.findViewById(R.id.fbMenu);
+        fbCurrentPos = (FloatingActionButton) view.findViewById(R.id.fbCurrentPos);
+        fbAdd = (FloatingActionButton) view.findViewById(R.id.fbAdd);
+        map_view = view.findViewById(R.id.mapView);
+
+        // 버튼 애니메이션 등록
+        fb_open = AnimationUtils.loadAnimation(mainActivity, R.anim.fb_open);
+        fb_close = AnimationUtils.loadAnimation(mainActivity, R.anim.fb_close);
+
+        // 카카오맵 인스턴스
+        mapView = new MapView(mainActivity);
+
+        // 플로팅 버튼 이벤트
+        fbMenu.setOnClickListener(this);
+        fbCurrentPos.setOnClickListener(this);
+        fbAdd.setOnClickListener(this);
     }
 
     // 다이얼로그
@@ -222,5 +225,60 @@ public class Add_frag extends Fragment {
         Address address = addresses.get(0);
 
         return address.getAddressLine(0).toString();
+    }
+
+    //플로팅 버튼 눌렀을때 애니메이션
+    public void anim() {
+
+        if (isFbOpen) {
+            fbCurrentPos.startAnimation(fb_close);
+            fbAdd.startAnimation(fb_close);
+            fbCurrentPos.setClickable(false);
+            fbAdd.setClickable(false);
+            isFbOpen = false;
+        } else {
+            fbCurrentPos.startAnimation(fb_open);
+            fbAdd.startAnimation(fb_open);
+            fbCurrentPos.setClickable(true);
+            fbAdd.setClickable(true);
+            isFbOpen = true;
+        }
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.fbMenu:
+
+                anim();
+                break;
+
+            case R.id.fbCurrentPos:
+
+                mapView.setMapCenterPoint(getCurrentPos(), true);
+                break;
+
+            case R.id.fbAdd:
+
+                // 화면 중앙 좌표
+                MapPoint mapPoint = mapView.getMapCenterPoint();
+
+                // 위도, 경도 가져옴
+                double latitude = mapPoint.getMapPointGeoCoord().latitude;
+                double longitude = mapPoint.getMapPointGeoCoord().longitude;
+
+                // 위도,경도로 주소 가져오기
+                String address = getCurrentAddress(latitude, longitude);
+                address = address.substring(5);
+                Function.settingToast(mainActivity, address);
+
+                // 다이얼로그
+                showDialog(latitude, longitude, address);
+
+                break;
+            default:
+                break;
+        }
     }
 }

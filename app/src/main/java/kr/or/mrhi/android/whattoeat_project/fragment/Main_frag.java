@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.location.Address;
 import android.location.Geocoder;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -14,7 +13,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -23,7 +21,6 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import net.daum.mf.map.api.MapPoint;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -35,7 +32,6 @@ import kr.or.mrhi.android.whattoeat_project.activity.ListActivity;
 import kr.or.mrhi.android.whattoeat_project.activity.MainActivity;
 import kr.or.mrhi.android.whattoeat_project.activity.MapActivity;
 import kr.or.mrhi.android.whattoeat_project.activity.RestaurantActivity;
-import kr.or.mrhi.android.whattoeat_project.activity.WebSearchActivity;
 import kr.or.mrhi.android.whattoeat_project.adapter.BrandListAdapter;
 import kr.or.mrhi.android.whattoeat_project.controller.RestaurantDB_Controller;
 import kr.or.mrhi.android.whattoeat_project.function.Function;
@@ -53,7 +49,6 @@ public class Main_frag extends Fragment implements BrandListAdapter.OnItemClickL
     private Button btnMoreList;
     private Button btnGoMap;
 
-    private ArrayList<RestaurantData> restaurantDataArrayList = new ArrayList<>();
 
     @Override
     public void onAttach(@NonNull Context context) {
