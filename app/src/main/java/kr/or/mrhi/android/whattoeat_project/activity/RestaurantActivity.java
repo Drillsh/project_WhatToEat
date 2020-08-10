@@ -146,7 +146,6 @@ public class RestaurantActivity extends AppCompatActivity implements View.OnClic
             for (CommentData commentData : commentArrayList) {
 
                 totalRating += commentData.getRating();
-
             }
             //위에서 더해준 총 별점을 등록된 리스트 사이즈로 나눠서 평균값을 구한다
             avgRating = totalRating / commentArrayList.size();

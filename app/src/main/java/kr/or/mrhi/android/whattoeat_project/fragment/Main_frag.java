@@ -50,8 +50,6 @@ public class Main_frag extends Fragment implements BrandListAdapter.OnItemClickL
     private Button btnMoreList;
     private Button btnGoMap;
 
-    private BrandListAdapter nearbyListAdapter;
-
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
@@ -62,13 +60,6 @@ public class Main_frag extends Fragment implements BrandListAdapter.OnItemClickL
     public void onDetach() {
         super.onDetach();
         mainActivity = null;
-    }
-
-    @RequiresApi(api = Build.VERSION_CODES.N)
-    @Override
-    public void onResume() {
-        super.onResume();
-        nearbyListAdapter.notifyDataSetChanged();
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
@@ -83,7 +74,7 @@ public class Main_frag extends Fragment implements BrandListAdapter.OnItemClickL
         try {
             // 어댑터 인스턴스
             BrandListAdapter todayListAdapter = new BrandListAdapter(mainActivity, true);
-            nearbyListAdapter = new BrandListAdapter(mainActivity, false);
+            BrandListAdapter nearbyListAdapter = new BrandListAdapter(mainActivity, false);
 
             // LinearLayoutManager 인스턴스
             LinearLayoutManager todayListManager = new LinearLayoutManager(mainActivity);
@@ -96,7 +87,8 @@ public class Main_frag extends Fragment implements BrandListAdapter.OnItemClickL
             rvNearbyBrandList.setLayoutManager(nearbyListManager);
 
             // DB에서 데이터 가져옴
-            ArrayList<RestaurantData> arrayList = getRestaurantData();
+            ArrayList<RestaurantData> arrayList = new ArrayList<>();
+            arrayList.addAll(getRestaurantData());
             ArrayList<RestaurantData> todayList = new ArrayList<>();
 
             // 랜덤 매장 추천
@@ -165,6 +157,8 @@ public class Main_frag extends Fragment implements BrandListAdapter.OnItemClickL
             case R.id.btnMoreList:
                 Intent intent = new Intent(mainActivity, ListActivity.class);
                 startActivity(intent);
+
+
                 break;
 
             // 지도 버튼 클릭
@@ -240,5 +234,4 @@ public class Main_frag extends Fragment implements BrandListAdapter.OnItemClickL
     @Override
     public void onItemClick(View v, int pos) {
     }
-
 }

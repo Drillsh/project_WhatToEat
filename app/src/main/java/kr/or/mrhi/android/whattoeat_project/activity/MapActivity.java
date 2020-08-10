@@ -25,7 +25,7 @@ import kr.or.mrhi.android.whattoeat_project.controller.RestaurantDB_Controller;
 import kr.or.mrhi.android.whattoeat_project.model.RestaurantData;
 
 // 전체 등록 리스트 지도에서 보기
-public class MapActivity extends AppCompatActivity implements View.OnClickListener, MapView.POIItemEventListener {
+public class MapActivity extends AppCompatActivity implements View.OnClickListener{
 
     private ImageButton btnGoMain;
     private ImageButton btnGoList;
@@ -66,7 +66,7 @@ public class MapActivity extends AppCompatActivity implements View.OnClickListen
         viewPagerAdapter.setArrayList(restaurantDataList);
         viewPager.setAdapter(viewPagerAdapter);
         viewPager.setOffscreenPageLimit(3);
-        viewPager.setCurrentItem(999 + brandPosition);
+        viewPager.setCurrentItem(1000);
 
         // 뷰페이저 체인지 리스너
         viewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
@@ -86,9 +86,6 @@ public class MapActivity extends AppCompatActivity implements View.OnClickListen
 
             }
         });
-
-        // 좌표 변환 리스너
-        mapView.setPOIItemEventListener(this);
 
         // 등록된 음식점들을 마커로 찍음
         for (int i = 0; i < restaurantDataList.size(); ++i) {
@@ -128,6 +125,14 @@ public class MapActivity extends AppCompatActivity implements View.OnClickListen
                 // 특정 POI(Point Of Interest: 좌표) item 선택
                 mapView.selectPOIItem(mapPOIItem, true);
 
+                // 렌더링 되기 전에 setCurrentItem이 먹지 않기 때문에 의도적으로 딜레이를 준다.
+                viewPager.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        viewPager.setCurrentItem(brandPosition);
+                    }
+                }, 100);
+
             } catch (IndexOutOfBoundsException e) {
                 Log.d("MapActivity", e.getMessage());
             }
@@ -139,6 +144,13 @@ public class MapActivity extends AppCompatActivity implements View.OnClickListen
                 mapView.setMapCenterPoint(mapPOIItem.getMapPoint(), true);
                 // 특정 POI(Point Of Interest: 좌표) item 선택
                 mapView.selectPOIItem(mapPOIItem, true);
+
+                viewPager.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        viewPager.setCurrentItem(0);
+                    }
+                }, 100);
 
             } catch (IndexOutOfBoundsException e) {
                 Log.d("MapActivity", e.getMessage());
@@ -172,27 +184,6 @@ public class MapActivity extends AppCompatActivity implements View.OnClickListen
         }
     }
 
-    // 마커 찍었을때 뷰페이저를 같이 바꾸는 함수
-    @Override
-    public void onPOIItemSelected(MapView mapView, MapPOIItem mapPOIItem) {
-        tvMapTitle.setText(mapPOIItem.getItemName());
-        viewPager.setCurrentItem(mapPOIItem.getTag());
-    }
-
-    @Override
-    public void onCalloutBalloonOfPOIItemTouched(MapView mapView, MapPOIItem mapPOIItem) {
-
-    }
-
-    @Override
-    public void onCalloutBalloonOfPOIItemTouched(MapView mapView, MapPOIItem mapPOIItem, MapPOIItem.CalloutBalloonButtonType calloutBalloonButtonType) {
-
-    }
-
-    @Override
-    public void onDraggablePOIItemMoved(MapView mapView, MapPOIItem mapPOIItem, MapPoint mapPoint) {
-
-    }
 
     // 커스텀 벌룬 클래스
 //    class CustomCalloutBalloonAdapter implements CalloutBalloonAdapter {

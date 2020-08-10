@@ -65,7 +65,7 @@ public class MainActivity extends AppCompatActivity {
         if (!checkLocationServicesStatus()) {
             showDialogForLocationServiceSetting();
 
-        }else {
+        } else {
             checkRunTimePermission();
         }
 
@@ -143,7 +143,7 @@ public class MainActivity extends AppCompatActivity {
                                            @NonNull String[] permissions,
                                            @NonNull int[] grandResults) {
 
-        if ( permsRequestCode == PERMISSIONS_REQUEST_CODE && grandResults.length == REQUIRED_PERMISSIONS.length) {
+        if (permsRequestCode == PERMISSIONS_REQUEST_CODE && grandResults.length == REQUIRED_PERMISSIONS.length) {
 
             // 요청 코드가 PERMISSIONS_REQUEST_CODE 이고, 요청한 퍼미션 개수만큼 수신되었다면
             boolean check_result = true;
@@ -156,10 +156,9 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
 
-            if ( check_result ) {
+            if (check_result) {
                 //위치 값을 가져올 수 있음
-            }
-            else {
+            } else {
                 // 거부한 퍼미션이 있다면 앱을 사용할 수 없는 이유를 설명해주고 앱을 종료. 2가지 케이스
                 if (ActivityCompat.shouldShowRequestPermissionRationale(this, REQUIRED_PERMISSIONS[0])
                         || ActivityCompat.shouldShowRequestPermissionRationale(this, REQUIRED_PERMISSIONS[1])) {
@@ -167,7 +166,7 @@ public class MainActivity extends AppCompatActivity {
                     Function.settingToast(getApplicationContext(), "퍼미션이 거부되었습니다. 앱을 다시 실행하여 퍼미션을 허용해주세요.");
                     finish();
 
-                }else {
+                } else {
                     Function.settingToast(getApplicationContext(), "퍼미션이 거부되었습니다. 설정(앱 정보)에서 퍼미션을 허용해야 합니다.");
                 }
             }
@@ -175,7 +174,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     //런타임 퍼미션 처리
-    void checkRunTimePermission(){
+    void checkRunTimePermission() {
 
         // 1. 위치 퍼미션을 가지고 있는지 체크
         int hasFineLocationPermission = ContextCompat.checkSelfPermission(MainActivity.this,
@@ -261,11 +260,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
-    public void onBackPressed(){
-        if(System.currentTimeMillis() - time >= 2000){
+    public void onBackPressed() {
+        if (System.currentTimeMillis() - time >= 2000) {
             time = System.currentTimeMillis();
-            Toast.makeText(getApplicationContext(),"'뒤로' 버튼을 한번 더 누르면 종료",Toast.LENGTH_SHORT).show();
-        }else if(System.currentTimeMillis() - time < 2000){
+            Toast.makeText(getApplicationContext(), "'뒤로' 버튼을 한번 더 누르면 종료", Toast.LENGTH_SHORT).show();
+        } else if (System.currentTimeMillis() - time < 2000) {
             finish();
         }
     }
@@ -307,7 +306,7 @@ public class MainActivity extends AppCompatActivity {
                 md.update(signature.toByteArray());
                 String something = new String(Base64.encode(md.digest(), 0));
                 Log.e("Hash key", something);
-        }
+            }
         } catch (Exception e) {
             // TODO Auto-generated catch block
             Log.e("name not found", e.toString());
